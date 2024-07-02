@@ -1,5 +1,5 @@
 {
-  "name": "tgmt",
+  "name": "tgmt-front",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:tgmt": "node dist/tgmt/server/server.mjs"
+    "serve:ssr:tgmt_front": "node dist/tgmt_front/server/server.mjs"
   },
   "private": true,
   "dependencies": {
