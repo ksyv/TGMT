@@ -7,12 +7,14 @@ const mongoose = require('mongoose'); // Import mongoose
 const dotenv = require('dotenv').config(); // Import dotenv
 
 // Connect to MongoDB
-mongoose.connect(process.env.DATABASE, { useNewUrlParser: true, useUnifiedTopology: true }) 
-  .then(()=> console.log('Connection à MongoDB OK...'))
+mongoose.connect(process.env.DATABASE, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connection à MongoDB OK...'))
   .catch(() => console.log('Echec de connection à MongoDB...'));
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/userRoutes'); // Importer userRoutes
+var gameRouter = require('./routes/gameRoutes'); // Importer gameRoutes
+var tableRouter = require('./routes/tableRoutes'); // Importer tableRoutes
 
 var app = express();
 
@@ -26,8 +28,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Routes principaux
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/users', usersRouter); // Utiliser userRoutes sur le chemin '/users'
+app.use('/api/games', gameRouter); // Utiliser gameRoutes sur le chemin '/games'
+app.use('/api/tables', tableRouter); // Utiliser tableRoutes sur le chemin '/tables'
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
