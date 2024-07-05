@@ -1,0 +1,30 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #ff6100;
+}
+
+.errors {
+  list-style-type: none;
+  padding: 0;
+}
+
+.errors li {
+  color: red;
+}
+
+.alert {
+  margin-top: 1rem;
+}
+
+.btn-custom-gradient {
+  background: linear-gradient(140deg, #ff6100 40%, #a916bb 90%);
+  color: #fff; /* Couleur du texte, à adapter selon le contraste souhaité */
+  border: none; /* Retirer la bordure si nécessaire */
+  /* Autres styles de bordure, ombre, etc. */
+}
+
+/* Si besoin d'autres styles personnalisés */

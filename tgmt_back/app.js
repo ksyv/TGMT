@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose'); // Import mongoose
 const dotenv = require('dotenv').config(); // Import dotenv
+const cors = require('cors');
+
 
 // Connect to MongoDB
 mongoose.connect(process.env.DATABASE, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -17,7 +19,8 @@ var gameRouter = require('./routes/gameRoutes'); // Importer gameRoutes
 var tableRouter = require('./routes/tableRoutes'); // Importer tableRoutes
 
 var app = express();
-
+// Middleware pour autoriser toutes les origines en développement
+app.use(cors());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'twig');

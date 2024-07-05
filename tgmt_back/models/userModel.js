@@ -10,6 +10,7 @@ var userSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     telephone: { type: String, required: false },
+    role: { type: String, enum: ['user', 'admin'], default: 'user' },
     createdAt: {
         type: Date,
         default: Date.now

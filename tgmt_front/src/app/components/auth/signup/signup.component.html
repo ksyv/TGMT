@@ -1,1 +1,59 @@
-<p>signup works!</p>
+<div class="container">
+  <div class="row justify-content-center mt-3">
+    <div class="col-lg-6">
+      <h1 class="text-center mb-4">Inscription</h1>
+      <div *ngIf="errorForm.length > 0">
+        <p class="alert alert-danger">Vérifiez les points suivants:</p>
+        <ul class="errors">
+          <li *ngFor="let error of errorForm">
+            <span *ngIf="error['username']">{{ error['username'].message }}</span>
+            <span *ngIf="error['firstname']">{{ error['firstname'].message }}</span>
+            <span *ngIf="error['lastname']">{{ error['lastname'].message }}</span>
+            <span *ngIf="error['email']">{{ error['email'].message }}</span>
+            <span *ngIf="error['telephone']">{{ error['telephone'].message }}</span>
+            <span *ngIf="error['password']">{{ error['password'].message }}</span>
+            <span *ngIf="error['passwordConfirm']">{{ error['passwordConfirm'].message }}</span>
+            <span *ngIf="error['passwordMismatch']">{{ error['passwordMismatch'].message }}</span>
+            <span *ngIf="error['userExist']">{{ error['userExist'].message }}</span>
+            <span *ngIf="error['general']">{{ error['general'] }}</span>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+      </div>
+      <form (ngSubmit)="onSubmit(signupForm)" #signupForm="ngForm">
+        <p class="text-center">Vous avez déjà un compte? <a routerLink="/sign-in">Connectez-vous</a></p>
+        <div class="form-group">
+          <label for="username">Nom d'utilisateur :</label>
+          <input type="text" class="form-control" id="username" name="username" [(ngModel)]="signupData.username" placeholder="champ obligatoire" required>
+        </div>
+        <div class="form-group">
+          <label for="firstname">Prenom :</label>
+          <input type="text" class="form-control" id="firstname" name="firstname" [(ngModel)]="signupData.firstname" placeholder="champ obligatoire" required>
+        </div>
+        <div class="form-group">
+          <label for="lastname">Nom :</label>
+          <input type="text" class="form-control" id="lastname" name="lastname" [(ngModel)]="signupData.lastname" placeholder="champ obligatoire" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email :</label>
+          <input type="email" class="form-control" id="email" name="email" [(ngModel)]="signupData.email" placeholder="champ obligatoire" required>
+        </div>
+        <div class="form-group">
+          <label for="telephone">Telephone :</label>
+          <input type="telephone" class="form-control" id="telephone" name="telephone" [(ngModel)]="signupData.telephone" placeholder="champ obligatoire" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Mot de passe :</label>
+          <input type="password" class="form-control" id="password" name="password" [(ngModel)]="signupData.password" placeholder="champ obligatoire" required>
+        </div>
+        <div class="form-group">
+          <label for="passwordConfirm">Confirmation du mot de passe :</label>
+          <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" [(ngModel)]="signupData.passwordConfirm" placeholder="champ obligatoire" required>
+        </div>
+        <button type="submit" class="btn btn-success btn-custom-gradient w-100 mt-3">Valider</button>
+      </form>
+    </div>
+  </div>
+</div>

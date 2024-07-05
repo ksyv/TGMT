@@ -6,31 +6,48 @@ const GameTable = require('../models/gameTableModel');
 module.exports = {
     // Inscription d'un nouvel utilisateur
     signup: (req, res) => {
-        bcrypt.hash(req.body.password, 10)
-            .then((hash) => {
-                const newUser = new User({
-                    email: req.body.email,
-                    password: hash,
-                });
-
-                return newUser.save();
-            })
+        User.findOne({ email: req.body.email })
             .then((user) => {
-                return res.status(201).json({
-                    status: 201,
-                    message: 'User created',
-                    result: user,
-                });
+                if (user) {
+                    return res.status(400).json({
+                        status: 400,
+                        message: 'L\'utilisateur existe déjà',
+                    });
+                }
+    
+                bcrypt.hash(req.body.password, 10)
+                    .then((hash) => {
+                        const newUser = new User({
+                            email: req.body.email,
+                            password: hash,
+                        });
+    
+                        return newUser.save();
+                    })
+                    .then((user) => {
+                        return res.status(201).json({
+                            status: 201,
+                            message: 'Utilisateur créé avec succès',
+                            result: user,
+                        });
+                    })
+                    .catch((error) => {
+                        return res.status(500).json({
+                            status: 500,
+                            message: 'Erreur lors de la création de l\'utilisateur',
+                            error: error.message,
+                        });
+                    });
             })
             .catch((error) => {
                 return res.status(500).json({
                     status: 500,
-                    message: 'Error when creating user',
+                    message: 'Erreur lors de la vérification de l\'utilisateur',
                     error: error.message,
                 });
             });
     },
-
+    
     // Connexion de l'utilisateur
     login: (req, res) => {
         User.findOne({ email: req.body.email })
@@ -51,14 +68,18 @@ module.exports = {
                             });
                         }
 
+                        const token = jwt.sign(
+                            { userId: user._id },
+                            process.env.SECRET,
+                            { expiresIn: '24h' }
+                        );
+
                         return res.status(200).json({
                             status: 200,
+                            message: 'Authentication successful',
                             userId: user._id,
-                            token: jwt.sign(
-                                { userId: user._id },
-                                process.env.SECRET,
-                                { expiresIn: '24h' }
-                            )
+                            token: token,
+                            role: user.role // Retourner le rôle de l'utilisateur
                         });
                     })
                     .catch((error) => {
@@ -100,6 +121,53 @@ module.exports = {
                 res.status(500).json({
                     status: 500,
                     message: 'Error when checking user',
+                    error: error.message,
+                });
+            });
+    },
+
+    // Mise à jour du rôle d'un utilisateur (par un administrateur)
+    updateRole: (req, res) => {
+        const { userId, newRole } = req.body;
+
+        // Vérifier si l'utilisateur actuel est administrateur
+        User.findById(userId)
+            .then(user => {
+                if (!user || user.role !== 'admin') {
+                    return res.status(403).json({
+                        status: 403,
+                        message: 'Unauthorized to update roles',
+                    });
+                }
+
+                // Mettre à jour le rôle de l'utilisateur cible
+                User.findByIdAndUpdate(userId, { role: newRole }, { new: true })
+                    .then(updatedUser => {
+                        if (!updatedUser) {
+                            return res.status(404).json({
+                                status: 404,
+                                message: 'User not found',
+                            });
+                        }
+
+                        res.status(200).json({
+                            status: 200,
+                            message: 'User role updated successfully',
+                            result: updatedUser,
+                        });
+                    })
+                    .catch(error => {
+                        res.status(500).json({
+                            status: 500,
+                            message: 'Error when updating user role',
+                            error: error.message,
+                        });
+                    });
+            })
+            .catch(error => {
+                res.status(500).json({
+                    status: 500,
+                    message: 'Error when checking current user',
                     error: error.message,
                 });
             });
