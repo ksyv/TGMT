@@ -8,6 +8,9 @@ import { EditGameComponent } from './components/gamecard/edit-game/edit-game.com
 import { SingleGameComponent } from './components/gamecard/single-game/single-game.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { UserInfoComponent } from './components/user-info/user-info.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+
 
 const routes: Routes = [
   {path: 'sign-up', component: SignupComponent},
@@ -18,6 +21,9 @@ const routes: Routes = [
   {path: 'single-game', component: SingleGameComponent},
   {path: 'dashboard', component: DashboardComponent },
   {path: 'mes-informations', component: UserInfoComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  {path: 'reset-password/:token', component: ResetPasswordComponent},
+  {path: 'reset-password', component: ResetPasswordComponent}
 ];
 
 @NgModule({

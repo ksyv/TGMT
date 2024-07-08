@@ -17,7 +17,10 @@ import { NotFoundComponent } from './components/partials/not-found/not-found.com
 import { HeaderPageComponent } from './components/partials/header-page/header-page.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { UserInfoComponent } from './components/user-info/user-info.component';
-import { AuthInterceptor } from './interceptor/auth.interceptor'; // Importez l'intercepteur JWT
+import { AuthInterceptor } from './interceptor/auth.interceptor';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -33,13 +36,16 @@ import { AuthInterceptor } from './interceptor/auth.interceptor'; // Importez l'
     NotFoundComponent,
     HeaderPageComponent,
     DashboardComponent,
-    UserInfoComponent
+    UserInfoComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } // Ajoutez l'intercepteur JWT aux providers

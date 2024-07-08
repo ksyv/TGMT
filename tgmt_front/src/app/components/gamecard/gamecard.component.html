@@ -1,1 +1,33 @@
-<p>gamecard works!</p>
+<div class="container">
+  <div class="row">
+    <!-- Utilisation de *ngFor pour itérer sur la liste de jeux -->
+    <div class="col-md-3" *ngFor="let game of games">
+      <!-- Carré représentant chaque jeu -->
+      <div class="game-card">
+        <!-- Lien cliquable vers la page du jeu -->
+        <a [routerLink]="['/single-game', game.id]">
+          <!-- Image du jeu avec lien -->
+          <img class="game-image" [src]="game.image" alt="Game Image">
+        </a>
+
+        <!-- Détails du jeu en deux colonnes -->
+        <div class="game-details">
+          <!-- Première colonne -->
+          <div class="column">
+            <div class="game-title">{{ game.name }}</div>
+            <div><span class="orange-text">Type:</span> {{ game.type }}</div>
+            <div><span class="orange-text">Catégorie:</span> {{ game.category }}</div>
+          </div>
+
+          <!-- Deuxième colonne -->
+          <div class="column">
+            <div><span class="orange-text">Âge minimum:</span> {{ game.ageMin }}</div>
+            <div><span class="orange-text">Difficulté:</span> {{ game.difficulty }}</div>
+            <div><span class="orange-text">Nombre de joueurs:</span> {{ game.playerMin }} - {{ game.playerMax }}</div>
+            <div><span class="orange-text">Temps de jeu:</span> {{ game.partytime }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

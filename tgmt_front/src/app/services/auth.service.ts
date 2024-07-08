@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, throwError, Observable, tap } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, throwError, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
@@ -36,9 +36,6 @@ export class AuthService {
 
     return this.http.post<any>('http://localhost:3000/users/login', { email, password })
       .pipe(
-        tap((response: any) => {
-          localStorage.setItem('token', response.token); // Assurez-vous que le token est correctement stocké
-        }),
         catchError((error: HttpErrorResponse) => {
           if (error.status === 401) {
             this.errorMessage = error.error.message;
@@ -66,7 +63,7 @@ export class AuthService {
   }
 
   updateUserInfo(user: any): Observable<any> {
-    return this.http.put<any>('http://localhost:3000/users/current', user)
+    return this.http.put<any>('http://localhost:3000/users/current', user, this.getHttpOptions())
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.errorMessage = 'Erreur lors de la mise à jour des informations. Veuillez réessayer plus tard.';
@@ -76,12 +73,40 @@ export class AuthService {
   }
 
   getUserInfo(): Observable<any> {
-    return this.http.get<any>('http://localhost:3000/users/current')
+    return this.http.get<any>('http://localhost:3000/users/current', this.getHttpOptions())
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.errorMessage = 'Erreur lors de la récupération des informations utilisateur. Veuillez réessayer plus tard.';
           return throwError(error);
         })
       );
+  }
+
+  forgotPassword(email: string): Observable<any> {
+    const url = 'http://localhost:3000/users/forgot-password'; // Endpoint pour la récupération de mot de passe
+    return this.http.post<any>(url, { email })
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          let errorMessage = 'Erreur lors de la récupération du mot de passe. Veuillez réessayer plus tard.';
+          if (error.error && error.error.message) {
+            errorMessage = error.error.message;
+          }
+          return throwError(errorMessage);
+        })
+      );
+  }
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    const url = `http://localhost:3000/users/reset-password/${token}`;
+    return this.http.post(url, { newPassword });
+}
+
+
+  private getHttpOptions() {
+    const token = localStorage.getItem(this.tokenKey);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    });
+    return { headers };
   }
 }

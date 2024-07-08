@@ -1,33 +1,34 @@
 import { Injectable } from '@angular/core';
 import {
-  HttpRequest,
-  HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
+  HttpHandler,
+  HttpRequest,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor() {}
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    // Vérifier si localStorage est disponible
+    if (typeof localStorage !== 'undefined') {
+      const token = localStorage.getItem('token');
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('token'); // Récupère le token JWT depuis le localStorage
-
-    if (token) {
-      console.log('Token JWT récupéré :', token); // Ajoute un message de débogage pour vérifier le token
-
-      request = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-    } else {
-      console.log('Aucun token JWT trouvé dans le localStorage.');
+      // Vérifier si un token est présent et ajouter l'en-tête d'autorisation si oui
+      if (token) {
+        const clonedReq = req.clone({
+          setHeaders: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return next.handle(clonedReq);
+      }
     }
 
-    console.log('Requête sortante avec en-tête Authorization :', request.headers.get('Authorization'));
-
-    return next.handle(request);
+    // Si localStorage n'est pas disponible ou si aucun token n'est présent, passer la requête sans modification
+    return next.handle(req);
   }
 }

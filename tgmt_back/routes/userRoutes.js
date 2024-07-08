@@ -3,6 +3,8 @@ const router = express.Router();
 const UserController = require('../controllers/UserController');
 const authMiddleware = require('../middlewares/auth'); // Middleware d'authentification
 const User = require('../models/userModel');
+const sendResetMail = require('../middlewares/email.service');
+const jwt = require('jsonwebtoken');
 
 router.get('/', (req, res) => {
     res.status(200).send('Users endpoint. Use /signup, /login, /check, etc.');
@@ -57,4 +59,48 @@ router.get('/:userId/game-tables', UserController.getUserGameTables);
 
 router.put('/current', authMiddleware, UserController.updateUser);
 
+// Endpoint pour la récupération de mot de passe
+router.post('/forgot-password', async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        }
+
+        // Générer un jeton de réinitialisation
+        const token = jwt.sign({ userId: user._id }, process.env.SECRET, { expiresIn: '1h' });
+
+        // Inclure le jeton dans la requête pour l'email de réinitialisation
+        req.body.token = token;
+
+        // Appeler le middleware pour envoyer l'email
+        sendResetMail(req, res, () => {});
+    } catch (error) {
+        console.log("Error during forgot password process:", error);
+        res.status(500).json({ message: 'Erreur lors de la réinitialisation du mot de passe' });
+    }
+});
+// Route pour réinitialiser le mot de passe
+router.post('/reset-password/:token', async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  // Vérification et traitement du token et du mot de passe
+  try {
+      // Vérification du token JWT
+      const decodedToken = jwt.verify(token, process.env.SECRET);
+      const userId = decodedToken.userId;
+
+      // Mise à jour du mot de passe de l'utilisateur
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      await User.findByIdAndUpdate(userId, { password: hashedPassword });
+
+      res.status(200).json({ message: 'Mot de passe réinitialisé avec succès' });
+  } catch (error) {
+      console.error("Erreur lors de la réinitialisation du mot de passe:", error);
+      res.status(400).json({ message: 'Jeton invalide ou expiré' });
+  }
+});
 module.exports = router;
