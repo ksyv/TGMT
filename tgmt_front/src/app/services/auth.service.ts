@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, throwError, Observable } from 'rxjs';
+import { BehaviorSubject, throwError, Observable, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
@@ -15,14 +15,30 @@ export class AuthService {
   userId$ = this.userIdSubject.asObservable();
 
   errorMessage: string = '';
+  private tokenKey = 'token';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    // Initialize localStorage when the service is constructed
+    this.initializeLocalStorage();
+  }
+
+  private initializeLocalStorage() {
+    if (typeof localStorage !== 'undefined') {
+      const token = localStorage.getItem(this.tokenKey);
+      if (token) {
+        localStorage.setItem(this.tokenKey, token);
+      }
+    }
+  }
 
   login(email: string, password: string): Observable<any> {
     this.errorMessage = '';
 
     return this.http.post<any>('http://localhost:3000/users/login', { email, password })
       .pipe(
+        tap((response: any) => {
+          localStorage.setItem('token', response.token); // Assurez-vous que le token est correctement stocké
+        }),
         catchError((error: HttpErrorResponse) => {
           if (error.status === 401) {
             this.errorMessage = error.error.message;
@@ -35,15 +51,10 @@ export class AuthService {
   }
 
   logout() {
-    // Actions de déconnexion : vider le token, réinitialiser les sujets, etc.
-    localStorage.removeItem('token'); // Exemple de suppression du token JWT du localStorage
-
-    // Réinitialisation des sujets
-    this.roleSubject.next('');
-    this.userIdSubject.next('');
-
-    // Redirection vers la page de connexion
-    this.router.navigate(['/signin']);
+    localStorage.removeItem(this.tokenKey); // Supprime le token du localStorage
+    this.roleSubject.next(''); // Réinitialise le sujet du rôle
+    this.userIdSubject.next(''); // Réinitialise le sujet de l'ID utilisateur
+    this.router.navigate(['/sign-in']); // Redirige vers la page de connexion
   }
 
   getRole() {
