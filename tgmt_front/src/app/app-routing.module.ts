@@ -10,9 +10,23 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { AuthGuard } from './guards/auth.guard';
+import { CreateGameComponent } from './admin/create-game/create-game.component';
 
 
 const routes: Routes = [
+  {
+    path: 'admin/dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'create-game',
+        component: CreateGameComponent,
+        canActivate: [AuthGuard], // Ajouter ce gardien pour les administrateurs
+      },
+    ],
+  },
   {path: 'sign-up', component: SignupComponent},
   {path: 'sign-in', component: SigninComponent},
   {path: 'gamecard', component: GamecardComponent},
@@ -23,7 +37,8 @@ const routes: Routes = [
   {path: 'mes-informations', component: UserInfoComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   {path: 'reset-password/:token', component: ResetPasswordComponent},
-  {path: 'reset-password', component: ResetPasswordComponent}
+  {path: 'reset-password', component: ResetPasswordComponent},
+  { path: 'single-game/:id', component: SingleGameComponent },
 ];
 
 @NgModule({

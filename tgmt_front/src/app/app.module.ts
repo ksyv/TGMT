@@ -21,6 +21,7 @@ import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { CreateGameComponent } from './admin/create-game/create-game.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     DashboardComponent,
     UserInfoComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    CreateGameComponent
   ],
   imports: [
     BrowserModule,

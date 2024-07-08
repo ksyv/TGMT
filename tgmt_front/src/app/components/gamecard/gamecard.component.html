@@ -5,7 +5,7 @@
       <!-- Carré représentant chaque jeu -->
       <div class="game-card">
         <!-- Lien cliquable vers la page du jeu -->
-        <a [routerLink]="['/single-game', game.id]">
+        <a [routerLink]="['/single-game', game._id]">
           <!-- Image du jeu avec lien -->
           <img class="game-image" [src]="game.image" alt="Game Image">
         </a>

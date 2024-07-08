@@ -1,1 +1,27 @@
-<p>single-game works!</p>
+<div *ngIf="game">
+  <h2>{{ game.name }}</h2>
+  <div class="game-details">
+    <!-- Première colonne -->
+    <div class="column">
+      <div class="game-title">{{ game.name }}</div>
+      <div><span class="orange-text">Type:</span> {{ game.type }}</div>
+      <div><span class="orange-text">Catégorie:</span> {{ game.category }}</div>
+      <div><span class="orange-text">Âge minimum:</span> {{ game.ageMin }}</div>
+      <div><span class="orange-text">Difficulté:</span> {{ game.difficulty }}</div>
+    </div>
+
+    <!-- Deuxième colonne -->
+    <div class="column">
+      <div><span class="orange-text">Auteur:</span> {{ game.author }}</div>
+      <div><span class="orange-text">Joueurs:</span> de {{ game.playerMin }} à {{ game.playerMax }}</div>
+      <div><span class="orange-text">Durée d'une partie:</span> {{ game.partytime }} minutes</div>
+      <div><span class="orange-text">Description:</span> {{ game.description }}</div>
+      <div><span class="orange-text">Règles:</span> <a href="{{ game.rules }}" target="_blank">Lien vers les règles</a></div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!game">
+  <p>Chargement en cours...</p>
+</div>
+
