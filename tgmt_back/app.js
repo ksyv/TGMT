@@ -9,7 +9,7 @@ const cors = require('cors');
 
 
 // Connect to MongoDB
-mongoose.connect(process.env.DATABASE, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.DATABASE)
   .then(() => console.log('Connection à MongoDB OK...'))
   .catch(() => console.log('Echec de connection à MongoDB...'));
 

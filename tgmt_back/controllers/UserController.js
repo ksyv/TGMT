@@ -6,8 +6,10 @@ const GameTable = require('../models/gameTableModel');
 module.exports = {
     // Inscription d'un nouvel utilisateur
     signup: (req, res) => {
-        User.findOne({ email: req.body.email })
-            .then((user) => {
+        const { username, firstname, lastname, email, password, telephone } = req.body;
+    
+        User.findOne({ email: email })
+            .then(user => {
                 if (user) {
                     return res.status(400).json({
                         status: 400,
@@ -15,34 +17,45 @@ module.exports = {
                     });
                 }
     
-                bcrypt.hash(req.body.password, 10)
-                    .then((hash) => {
+                bcrypt.hash(password, 10)
+                    .then(hash => {
                         const newUser = new User({
-                            email: req.body.email,
+                            username: username,
+                            firstname: firstname,
+                            lastname: lastname,
+                            email: email,
                             password: hash,
+                            telephone: telephone
                         });
     
-                        return newUser.save();
+                        newUser.save()
+                            .then(savedUser => {
+                                res.status(201).json({
+                                    status: 201,
+                                    message: 'Utilisateur créé avec succès',
+                                    result: savedUser,
+                                });
+                            })
+                            .catch(error => {
+                                res.status(500).json({
+                                    status: 500,
+                                    message: 'Erreur lors de l\'enregistrement de l\'utilisateur',
+                                    error: error.message,
+                                });
+                            });
                     })
-                    .then((user) => {
-                        return res.status(201).json({
-                            status: 201,
-                            message: 'Utilisateur créé avec succès',
-                            result: user,
-                        });
-                    })
-                    .catch((error) => {
-                        return res.status(500).json({
+                    .catch(error => {
+                        res.status(500).json({
                             status: 500,
-                            message: 'Erreur lors de la création de l\'utilisateur',
+                            message: 'Erreur lors du hashage du mot de passe',
                             error: error.message,
                         });
                     });
             })
-            .catch((error) => {
-                return res.status(500).json({
+            .catch(error => {
+                res.status(500).json({
                     status: 500,
-                    message: 'Erreur lors de la vérification de l\'utilisateur',
+                    message: 'Erreur lors de la vérification de l\'utilisateur existant',
                     error: error.message,
                 });
             });
@@ -73,13 +86,14 @@ module.exports = {
                             process.env.SECRET,
                             { expiresIn: '24h' }
                         );
+                        const isAdmin = user.role === 'admin';
 
                         return res.status(200).json({
                             status: 200,
                             message: 'Authentication successful',
                             userId: user._id,
                             token: token,
-                            role: user.role // Retourner le rôle de l'utilisateur
+                            isAdmin: isAdmin, // Retourner le rôle de l'utilisateur
                         });
                     })
                     .catch((error) => {
@@ -126,53 +140,7 @@ module.exports = {
             });
     },
 
-    // Mise à jour du rôle d'un utilisateur (par un administrateur)
-    updateRole: (req, res) => {
-        const { userId, newRole } = req.body;
-
-        // Vérifier si l'utilisateur actuel est administrateur
-        User.findById(userId)
-            .then(user => {
-                if (!user || user.role !== 'admin') {
-                    return res.status(403).json({
-                        status: 403,
-                        message: 'Unauthorized to update roles',
-                    });
-                }
-
-                // Mettre à jour le rôle de l'utilisateur cible
-                User.findByIdAndUpdate(userId, { role: newRole }, { new: true })
-                    .then(updatedUser => {
-                        if (!updatedUser) {
-                            return res.status(404).json({
-                                status: 404,
-                                message: 'User not found',
-                            });
-                        }
-
-                        res.status(200).json({
-                            status: 200,
-                            message: 'User role updated successfully',
-                            result: updatedUser,
-                        });
-                    })
-                    .catch(error => {
-                        res.status(500).json({
-                            status: 500,
-                            message: 'Error when updating user role',
-                            error: error.message,
-                        });
-                    });
-            })
-            .catch(error => {
-                res.status(500).json({
-                    status: 500,
-                    message: 'Error when checking current user',
-                    error: error.message,
-                });
-            });
-    },
-
+    
     // Créer une table de jeu pour un utilisateur spécifique
     createGameTable: (req, res) => {
         const { userId, startTime } = req.body;
@@ -231,4 +199,85 @@ module.exports = {
                 });
             });
     },
+    // GET - Récupération des informations d'un utilisateur par son ID
+    getUserInfo: (req, res) => {
+        const userId = req.params.userId;
+
+        User.findById(userId)
+            .then(user => {
+                if (!user) {
+                    return res.status(404).json({
+                        status: 404,
+                        message: 'User not found',
+                    });
+                }
+                res.status(200).json({
+                    status: 200,
+                    message: 'User info retrieved successfully',
+                    result: user,
+                });
+            })
+            .catch(error => {
+                res.status(500).json({
+                    status: 500,
+                    message: 'Error when getting user info',
+                    error: error.message,
+                });
+            });
+    },
+    // Récupérer un utilisateur par son ID
+    getUserById: (userId) => {
+        return User.findById(userId);
+    },
+    updateUser: async (req, res) => {
+        console.log("Méthode updateUser appelée");
+        const userId = req.userId; // Supposons que l'ID de l'utilisateur est accessible via req.userId
+        console.log("ID utilisateur:", userId);
+        const { username, firstname, lastname, email, telephone, password } = req.body;
+        console.log("Données reçues:", req.body);
+    
+        try {
+            // Trouver l'utilisateur par ID
+            let user = await User.findById(userId);
+            if (!user) {
+                return res.status(404).json({
+                    status: 404,
+                    message: 'Utilisateur non trouvé',
+                });
+            }
+            console.log("Utilisateur trouvé:", user);
+    
+            // Mettre à jour les champs
+            user.username = username || user.username;
+            user.firstname = firstname || user.firstname;
+            user.lastname = lastname || user.lastname;
+            user.email = email || user.email;
+            user.telephone = telephone || user.telephone;
+    
+            // Si un mot de passe est fourni, le hacher avant de mettre à jour
+            if (password) {
+                user.password = await bcrypt.hash(password, 10);
+                console.log("Mot de passe haché:", user.password);
+            }
+    
+            // Sauvegarder l'utilisateur mis à jour
+            await user.save();
+            console.log("Utilisateur mis à jour:", user);
+    
+            // Retourner les informations mises à jour de l'utilisateur
+            res.status(200).json({
+                status: 200,
+                message: 'Informations utilisateur mises à jour avec succès',
+                result: user,
+            });
+        } catch (error) {
+            console.log("Erreur lors de la mise à jour:", error);
+            res.status(500).json({
+                status: 500,
+                message: 'Erreur lors de la mise à jour des informations utilisateur',
+                error: error.message,
+            });
+        }
+    }
+    
 };

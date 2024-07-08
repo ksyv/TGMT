@@ -1,5 +1,7 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'; // Importez HTTP_INTERCEPTORS
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,9 +15,9 @@ import { HeaderComponent } from './components/partials/header/header.component';
 import { FooterComponent } from './components/partials/footer/footer.component';
 import { NotFoundComponent } from './components/partials/not-found/not-found.component';
 import { HeaderPageComponent } from './components/partials/header-page/header-page.component';
-import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { UserInfoComponent } from './components/user-info/user-info.component';
+import { AuthInterceptor } from './interceptor/auth.interceptor'; // Importez l'intercepteur JWT
 
 @NgModule({
   declarations: [
@@ -29,18 +31,20 @@ import { FormsModule } from '@angular/forms';
     HeaderComponent,
     FooterComponent,
     NotFoundComponent,
-    HeaderPageComponent
+    HeaderPageComponent,
+    DashboardComponent,
+    UserInfoComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule,
     FormsModule,
   ],
   providers: [
-    provideClientHydration()
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } // Ajoutez l'intercepteur JWT aux providers
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

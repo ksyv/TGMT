@@ -14,7 +14,15 @@
             <li><a href="https://www.opbc.fr/index.php#opbc">OPBC</a></li>
             <li><a href="https://www.opbc.fr/index.php#contact">CONTACT</a></li>
             <li><a href="/gamecard">JEUX</a></li>
-            <li><a href="/sign-in">CONNEXION</a></li>
+            <li class="nav-item" *ngIf="!isLoggedIn">
+              <a routerLink="/sign-in">CONNEXION</a>
+            </li>
+            <li  *ngIf="isLoggedIn">
+              <a routerLink="/dashboard">MON COMPTE</a>
+            </li>
+            <li *ngIf="isLoggedIn">
+              <a  (click)="onLogout()">DECONNEXION</a>
+            </li>
           </ul>
         </div>
 

@@ -6,6 +6,8 @@ import { GamecardComponent } from './components/gamecard/gamecard.component';
 import { AddGameComponent } from './components/gamecard/add-game/add-game.component';
 import { EditGameComponent } from './components/gamecard/edit-game/edit-game.component';
 import { SingleGameComponent } from './components/gamecard/single-game/single-game.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { UserInfoComponent } from './components/user-info/user-info.component';
 
 const routes: Routes = [
   {path: 'sign-up', component: SignupComponent},
@@ -14,6 +16,8 @@ const routes: Routes = [
   {path: 'add-game', component: AddGameComponent},
   {path: 'edit-game', component: EditGameComponent},
   {path: 'single-game', component: SingleGameComponent},
+  {path: 'dashboard', component: DashboardComponent },
+  {path: 'mes-informations', component: UserInfoComponent },
 ];
 
 @NgModule({

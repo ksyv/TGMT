@@ -1,61 +1,76 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { BehaviorSubject } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, throwError, Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private api = environment.api;
-  token: string = '';
-  userId: string = '';
-  isAuth$ = new BehaviorSubject<boolean>(false);
+  public roleSubject = new BehaviorSubject<string>('');
+  role$ = this.roleSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  public userIdSubject = new BehaviorSubject<string>('');
+  userId$ = this.userIdSubject.asObservable();
 
-  signup(email: string, password: string) {
-    return new Promise((resolve, reject) => {
-      this.http.post<{ status: number, message: string }>(`${this.api}/users/signup`, { email, password }).subscribe(
-        (signupData: { status: number, message: string }) => {
-          if (signupData.status === 201) {
-            this.signin(email, password)
-              .then(() => {
-                resolve(true);
-              })
-              .catch((error) => {
-                reject(error);
-              });
+  errorMessage: string = '';
+
+  constructor(private http: HttpClient, private router: Router) {}
+
+  login(email: string, password: string): Observable<any> {
+    this.errorMessage = '';
+
+    return this.http.post<any>('http://localhost:3000/users/login', { email, password })
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            this.errorMessage = error.error.message;
           } else {
-            reject(signupData.message);
+            this.errorMessage = 'Erreur lors de la connexion. Veuillez réessayer plus tard.';
           }
-        },
-        (error) => {
-          reject(error);
-        }
+          return throwError(error);
+        })
       );
-    });
   }
 
-  signin(email: string, password: string) {
-    return new Promise((resolve, reject) => {
-      this.http.post<{ token: string, userId: string }>(`${this.api}/users/login`, { email, password }).subscribe(
-        (authData) => {
-          this.token = authData.token;
-          this.userId = authData.userId;
-          this.isAuth$.next(true);
-          resolve(authData);
-        },
-        (error) => {
-          reject(error);
-        }
-      );
-    });
+  logout() {
+    // Actions de déconnexion : vider le token, réinitialiser les sujets, etc.
+    localStorage.removeItem('token'); // Exemple de suppression du token JWT du localStorage
+
+    // Réinitialisation des sujets
+    this.roleSubject.next('');
+    this.userIdSubject.next('');
+
+    // Redirection vers la page de connexion
+    this.router.navigate(['/signin']);
   }
 
-  logout() {;
-    this.isAuth$.next(false);
-    this.userId = "";
-    this.token = "";
+  getRole() {
+    return this.role$;
+  }
+
+  getUserId() {
+    return this.userId$;
+  }
+
+  updateUserInfo(user: any): Observable<any> {
+    return this.http.put<any>('http://localhost:3000/users/current', user)
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          this.errorMessage = 'Erreur lors de la mise à jour des informations. Veuillez réessayer plus tard.';
+          return throwError(error);
+        })
+      );
+  }
+
+  getUserInfo(): Observable<any> {
+    return this.http.get<any>('http://localhost:3000/users/current')
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          this.errorMessage = 'Erreur lors de la récupération des informations utilisateur. Veuillez réessayer plus tard.';
+          return throwError(error);
+        })
+      );
   }
 }

@@ -1,0 +1,15 @@
+<nav>
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="selectedTab === 'mes-informations'" (click)="selectedTab = 'mes-informations'">Mes Informations</a>
+    </li>
+    <!-- Ajoutez d'autres onglets si nécessaire -->
+  </ul>
+</nav>
+
+<div class="tab-content mt-3">
+  <div *ngIf="selectedTab === 'mes-informations'">
+    <app-user-info></app-user-info> <!-- Assurez-vous que le sélecteur est correct -->
+  </div>
+  <!-- Ajoutez les autres contenus pour les autres onglets -->
+</div>
