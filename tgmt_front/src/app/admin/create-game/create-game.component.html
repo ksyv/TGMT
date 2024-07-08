@@ -1,1 +1,54 @@
-<p>create-game works!</p>
+<!-- src/app/admin/create-game/create-game.component.html -->
+<form [formGroup]="createGameForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="name">Nom du jeu</label>
+    <input id="name" formControlName="name" type="text">
+  </div>
+  <div>
+    <label for="type">Type</label>
+    <input id="type" formControlName="type" type="text">
+  </div>
+  <div>
+    <label for="category">Catégorie</label>
+    <input id="category" formControlName="category" type="text">
+  </div>
+  <div>
+    <label for="ageMin">Âge minimum</label>
+    <input id="ageMin" formControlName="ageMin" type="number">
+  </div>
+  <div>
+    <label for="difficulty">Difficulté</label>
+    <input id="difficulty" formControlName="difficulty" type="text">
+  </div>
+  <div>
+    <label for="author">Auteur</label>
+    <input id="author" formControlName="author" type="text">
+  </div>
+  <div>
+    <label for="playerMin">Nombre minimum de joueurs</label>
+    <input id="playerMin" formControlName="playerMin" type="number">
+  </div>
+  <div>
+    <label for="playerMax">Nombre maximum de joueurs</label>
+    <input id="playerMax" formControlName="playerMax" type="number">
+  </div>
+  <div>
+    <label for="description">Description</label>
+    <textarea id="description" formControlName="description"></textarea>
+  </div>
+  <div>
+    <label for="image">Image</label>
+    <input id="image" formControlName="image" type="text">
+  </div>
+  <div>
+    <label for="partytime">Temps de partie (minutes)</label>
+    <input id="partytime" formControlName="partytime" type="number">
+  </div>
+  <div>
+    <label for="rules">Lien vers les règles</label>
+    <input id="rules" formControlName="rules" type="text">
+  </div>
+  <div>
+    <button type="submit">Créer le jeu</button>
+  </div>
+</form>

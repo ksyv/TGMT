@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-signin',
@@ -13,41 +13,36 @@ export class SigninComponent {
     email: '',
     password: ''
   };
-  errorForm: any[] = []; // Variable pour stocker le message d'erreur
+  errorForm: any[] = [];
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
 
   onSubmit(form: NgForm) {
     this.errorForm = [];
 
     if (form.invalid) {
-      if (form.controls['email'] && form.controls['email'].errors) {
-        this.errorForm.push({ email: { message: 'Email est requis' } });
-      }
-      if (form.controls['password'] && form.controls['password'].errors) {
-        this.errorForm.push({ password: { message: 'Mot de passe est requis' } });
-      }
+      // Gérer les erreurs de formulaire
       return;
     }
 
-    // Appel de la méthode login de AuthService
     this.authService.login(this.signInData.email, this.signInData.password)
       .subscribe(
         (response: any) => {
-          // Si la connexion réussit, gérer la réponse
-          this.authService.roleSubject.next(response.isAdmin ? 'admin' : 'user');
-          this.authService.userIdSubject.next(response.userId);
-          localStorage.setItem('token', response.token);
-          this.errorForm = []; // Réinitialiser le message d'erreur
-          this.router.navigate(['/dashboard']);
+          // Si la connexion réussit
+          this.errorForm = [];
+
+          // Redirection en fonction du rôle
+          if (response.role === 'admin') {
+            this.router.navigateByUrl('/admin/dashboard');
+          } else {
+            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+            this.router.navigateByUrl(returnUrl);
+          }
         },
         (error: any) => {
-          // Si la connexion échoue, gérer l'erreur
-          if (error.status === 401) {
-            this.errorForm.push({ password: { message: 'Mot de passe incorrect' } });
-          } else {
-            this.errorForm.push({ general: 'Erreur de serveur. Veuillez réessayer plus tard.' });
-          }
+          // Si la connexion échoue, gérer les erreurs
+          console.error('Login error:', error);
+          this.errorForm.push({ general: 'Erreur de connexion. Veuillez réessayer plus tard.' });
         }
       );
   }

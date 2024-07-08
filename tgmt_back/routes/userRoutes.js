@@ -42,6 +42,7 @@ router.get('/current', authMiddleware, (req, res) => {
                 firstname: user.firstname,
                 lastname: user.lastname,
                 telephone: user.telephone,
+                role: user.role,
                 // Ajoutez d'autres champs si nécessaire
             });
         })

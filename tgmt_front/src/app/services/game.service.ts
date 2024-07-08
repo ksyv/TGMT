@@ -22,4 +22,8 @@ export class GameService {
   getGameById(id: string): Observable<GameResponse> { // Modifier le type de retour pour GameResponse
     return this.http.get<GameResponse>(`${this.baseUrl}/${id}`);
   }
+   // Créer un nouveau jeu
+   createGame(game: Game): Observable<Game> {
+    return this.http.post<Game>(`${this.baseUrl}`, game);
+  }
 }

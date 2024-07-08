@@ -86,14 +86,13 @@ module.exports = {
                             process.env.SECRET,
                             { expiresIn: '24h' }
                         );
-                        const isAdmin = user.role === 'admin';
 
                         return res.status(200).json({
                             status: 200,
                             message: 'Authentication successful',
                             userId: user._id,
                             token: token,
-                            isAdmin: isAdmin, // Retourner le rôle de l'utilisateur
+                            role: user.role, // Retourner le rôle de l'utilisateur
                         });
                     })
                     .catch((error) => {
@@ -214,6 +213,7 @@ module.exports = {
                 res.status(200).json({
                     status: 200,
                     message: 'User info retrieved successfully',
+                    role: user.role,
                     result: user,
                 });
             })
