@@ -3,8 +3,9 @@
     <li class="nav-item">
       <a class="nav-link" [class.active]="selectedTab === 'mes-informations'" (click)="selectedTab = 'mes-informations'">Mes Informations</a>
     </li>
-    <li>
-      <a routerLink="create-game">Créer un Nouveau Jeu</a>
+    <li *ngIf="isAdmin" class="nav_item">
+      <a class="nav-link" [class.active]="selectedTab === 'create-game'" (click)="selectedTab = 'create-game'">Nouveau jeu</a>
+
     </li>
     <!-- Ajoutez d'autres onglets si nécessaire -->
   </ul>
@@ -15,4 +16,7 @@
     <app-user-info></app-user-info> <!-- Assurez-vous que le sélecteur est correct -->
   </div>
   <!-- Ajoutez les autres contenus pour les autres onglets -->
+</div>
+<div *ngIf="selectedTab === 'create-game'">
+  <app-create-game></app-create-game>
 </div>
