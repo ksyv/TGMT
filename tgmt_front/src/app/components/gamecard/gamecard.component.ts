@@ -8,6 +8,17 @@ import { GameService } from '../../services/game.service'; // Assurez-vous d'imp
 })
 export class GamecardComponent implements OnInit {
   games: any[] = []; // Assurez-vous de définir le type correct ici
+  searchParams = {
+    name: '',
+    type: '',
+    category: '',
+    ageMin: null,
+    difficulty: '',
+    author: '',
+    playerMin: null,
+    playerMax: null,
+    partytime: null
+  };
 
   constructor(private gameService: GameService) {}
 
@@ -25,5 +36,15 @@ export class GamecardComponent implements OnInit {
       }
     );
   }
-}
 
+  searchGames() {
+    this.gameService.searchGames(this.searchParams).subscribe(
+      (data: any) => {
+        this.games = data.result;
+      },
+      (error: any) => {
+        console.error('Error searching games:', error);
+      }
+    );
+  }
+}

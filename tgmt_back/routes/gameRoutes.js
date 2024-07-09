@@ -6,6 +6,9 @@ const router = express.Router();
 // Middleware pour gérer les images de jeu si nécessaire
 const gameImageUpload = require('../middlewares/multer.config');
 
+// GET - Rechercher des jeux par filtres
+router.get('/search', auth, GameController.searchGames); // Nouvelle route
+
 // GET - Récupérer tous les jeux
 router.get('/', auth, GameController.listGames);
 
