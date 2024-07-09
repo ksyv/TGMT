@@ -3,7 +3,14 @@
   <div class="row justify-content-center">
     <div class="col-lg-6">
       <h1 class="text-center mb-4">Créer un Nouveau Jeu</h1>
+      <p class="disclaimer">Attention: le bouton de soumission de formulaire ne sera actif que si tous les champs sont remplis.</p>
       <form [formGroup]="createGameForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+        <div *ngIf="successMessage" class="alert alert-success" role="alert">
+          {{ successMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+          {{ errorMessage }}
+        </div>
         <div class="form-group">
           <label for="name">Nom du jeu</label>
           <input id="name" formControlName="name" class="form-control" type="text">

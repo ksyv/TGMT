@@ -19,7 +19,11 @@ a {
 .alert {
   margin-top: 1rem;
 }
-
+.disclaimer {
+  font-size: 0.8rem;
+  color: #666;
+  text-align: center;
+}
 .btn-custom-gradient {
   background: linear-gradient(140deg, #ff6100 40%, #a916bb 90%);
   color: #fff; /* Couleur du texte, à adapter selon le contraste souhaité */

@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 })
 export class CreateGameComponent implements OnInit {
   createGameForm: FormGroup;
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -54,11 +56,15 @@ export class CreateGameComponent implements OnInit {
 
       this.gameService.createGame(formData).subscribe(
         response => {
-          console.log('Game created successfully:', response);
-          this.router.navigate(['/admin/dashboard']);
+          this.successMessage = 'Jeu créé avec succes!';
+          this.errorMessage = null;
+          this.createGameForm.reset();
+          // Optionally, navigate to another page
+          // this.router.navigate(['/admin/dashboard']);
         },
         error => {
-          console.error('Error creating game:', error);
+          this.successMessage = null;
+          this.errorMessage = 'Erreur dans la création du jeu, essayez encore.';
         }
       );
     }
