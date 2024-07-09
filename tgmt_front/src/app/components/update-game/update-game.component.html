@@ -1,18 +1,63 @@
 <div class="container" *ngIf="game">
-  <h2>Mise à jour du jeu</h2>
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <h1 class="text-center mb-4">Mise à jour du jeu</h1>
 
-  <form (ngSubmit)="updateGame()">
-    <label>Nom du jeu</label>
-    <input type="text" [(ngModel)]="game.name" name="name" required>
+      <form (ngSubmit)="updateGame()">
+        <label>Nom du jeu</label>
+        <input type="text" class="form-control" [(ngModel)]="game.name" name="name" required>
 
-    <!-- Vérification pour game.type -->
-    <div *ngIf="game.type">
-      <label>Type du jeu</label>
-      <input type="text" [(ngModel)]="game.type" name="type">
+        <!-- Vérification pour game.type -->
+        <div class="form-group" *ngIf="game.type">
+          <label>Type du jeu</label>
+          <input type="text" class="form-control" [(ngModel)]="game.type" name="type">
+        </div>
+        <div class="form-group" *ngIf="game.category">
+          <label>Catégorie du jeu</label>
+          <input type="text" class="form-control" [(ngModel)]="game.category" name="category">
+        </div>
+        <div *ngIf="game.ageMin">
+          <label>Âge minimum</label>
+          <input type="number" class="form-control" [(ngModel)]="game.ageMin" name="ageMin">
+        </div>
+        <div *ngIf="game.difficulty">
+          <label>Difficulté</label>
+          <input type="text" class="form-control" [(ngModel)]="game.difficulty" name="difficulty">
+        </div>
+        <div *ngIf="game.author">
+          <label>Auteur</label>
+          <input type="text" class="form-control" [(ngModel)]="game.author" name="author">
+        </div>
+        <div *ngIf="game.playerMin">
+          <label>Nombre minimum de joueurs</label>
+          <input type="number" class="form-control" [(ngModel)]="game.playerMin" name="playerMin">
+        </div>
+        <div *ngIf="game.playerMax">
+          <label>Nombre maximum de joueurs</label>
+          <input type="number" class="form-control" [(ngModel)]="game.playerMax" name="playerMax">
+        </div>
+        <div *ngIf="game.description">
+          <label>Description</label>
+          <textarea class="form-control" [(ngModel)]="game.description" name="description"></textarea>
+        </div>
+        <div *ngIf="game.image">
+          <label>Image</label>
+          <input type="file" class="form-control" (change)="onFileChange($event)" name="image">
+        </div>
+        <div *ngIf="game.partytime">
+          <label>Temps de partie (minutes)</label>
+          <input type="number" class="form-control" [(ngModel)]="game.partytime" name="partytime">
+        </div>
+        <div *ngIf="game.rules">
+          <label>Lien vers les règles</label>
+          <input type="text" class="form-control" [(ngModel)]="game.rules" name="rules">
+        </div>
+
+
+        <!-- Ajoute des vérifications similaires pour les autres champs -->
+
+        <button class="btn btn-success btn-custom-gradient w-100 mt-3" type="submit">Mettre à jour</button>
+      </form>
     </div>
-
-    <!-- Ajoute des vérifications similaires pour les autres champs -->
-
-    <button type="submit">Mettre à jour</button>
-  </form>
+  </div>
 </div>

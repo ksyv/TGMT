@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameService } from '../../services/game.service';
 import { Game } from '../../models/game';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-update-game',
@@ -11,11 +12,13 @@ import { Game } from '../../models/game';
 export class UpdateGameComponent implements OnInit {
   gameId: string = '';
   game: Game | undefined;
+  createGameForm: FormGroup | any;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private gameService: GameService
+
   ) {
     this.gameId = this.route.snapshot.paramMap.get('id') || '';
   }
@@ -33,6 +36,14 @@ export class UpdateGameComponent implements OnInit {
         );
     } else {
       console.error('No game ID provided');
+    }
+  }
+  onFileChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.createGameForm.patchValue({
+        image: file
+      });
     }
   }
 
