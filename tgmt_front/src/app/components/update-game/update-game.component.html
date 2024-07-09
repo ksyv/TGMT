@@ -1,0 +1,18 @@
+<div class="container" *ngIf="game">
+  <h2>Mise à jour du jeu</h2>
+
+  <form (ngSubmit)="updateGame()">
+    <label>Nom du jeu</label>
+    <input type="text" [(ngModel)]="game.name" name="name" required>
+
+    <!-- Vérification pour game.type -->
+    <div *ngIf="game.type">
+      <label>Type du jeu</label>
+      <input type="text" [(ngModel)]="game.type" name="type">
+    </div>
+
+    <!-- Ajoute des vérifications similaires pour les autres champs -->
+
+    <button type="submit">Mettre à jour</button>
+  </form>
+</div>

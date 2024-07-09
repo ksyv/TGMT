@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GameService } from '../../../services/game.service';
-import { AuthService } from '../../../services/auth.service'; // Importe le service d'authentification
+import { AuthService } from '../../../services/auth.service';
 import { Game } from '../../../models/game';
 
 @Component({
@@ -11,12 +11,13 @@ import { Game } from '../../../models/game';
 })
 export class SingleGameComponent implements OnInit {
   game: Game | undefined;
-  isAdmin: boolean = false; // Variable pour vérifier si l'utilisateur est un admin
+  isAdmin: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private gameService: GameService,
-    private authService: AuthService // Injecte le service d'authentification
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -36,28 +37,16 @@ export class SingleGameComponent implements OnInit {
       console.error('No game ID provided');
     }
 
-    // Vérifie le rôle de l'utilisateur au chargement du composant
     this.authService.getRole().subscribe(role => {
-      this.isAdmin = (role === 'admin'); // Met à jour la variable isAdmin
+      this.isAdmin = (role === 'admin');
     });
   }
 
-  updateGame(): void {
-    if (this.game) {
-      // Appelle le service pour mettre à jour le jeu
-      this.gameService.updateGame(this.game).subscribe(
-        response => {
-          console.log('Jeu mis à jour avec succès:', response);
-          // Peut-être afficher un message de succès ou rediriger l'utilisateur
-        },
-        error => {
-          console.error('Erreur lors de la mise à jour du jeu:', error);
-          // Afficher un message d'erreur à l'utilisateur
-        }
-      );
+  goToUpdatePage(): void {
+    if (this.game && this.game._id) {
+      this.router.navigate(['/games', this.game._id, 'update']);
     }
   }
-
   deleteGame(): void {
     if (this.game) {
       // Appelle le service pour supprimer le jeu
@@ -74,3 +63,4 @@ export class SingleGameComponent implements OnInit {
     }
   }
 }
+
