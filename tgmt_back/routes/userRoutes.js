@@ -69,6 +69,9 @@ router.get('/:userId/game-tables', UserController.getUserGameTables);
 
 router.put('/current', authMiddleware, UserController.updateUser);
 
+router.put('/:userId/update-role', authMiddleware, UserController.updateUserRole);
+
+
 // Endpoint pour la récupération de mot de passe
 router.post('/forgot-password', async (req, res) => {
     const { email } = req.body;

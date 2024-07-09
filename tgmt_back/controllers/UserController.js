@@ -278,6 +278,28 @@ module.exports = {
                 error: error.message,
             });
         }
+    },
+    updateUserRole: async (req, res) => {
+        const userId = req.params.userId;
+        const { role } = req.body;
+
+        try {
+            const user = await User.findById(userId);
+
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            // Mettre à jour le rôle de l'utilisateur
+            user.role = role || user.role;
+
+            // Sauvegarder l'utilisateur mis à jour
+            await user.save();
+
+            res.status(200).json({ message: 'User role updated successfully', user });
+        } catch (error) {
+            console.error('Error updating user role:', error);
+            res.status(500).json({ message: 'Internal server error', error });
+        }
     }
-    
 };
