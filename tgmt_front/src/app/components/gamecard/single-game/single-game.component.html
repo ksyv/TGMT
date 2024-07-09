@@ -1,27 +1,54 @@
 <div *ngIf="game">
-  <h2>{{ game.name }}</h2>
-  <div class="game-details">
-    <!-- Première colonne -->
-    <div class="column">
-      <div class="game-title">{{ game.name }}</div>
-      <div><span class="orange-text">Type:</span> {{ game.type }}</div>
-      <div><span class="orange-text">Catégorie:</span> {{ game.category }}</div>
-      <div><span class="orange-text">Âge minimum:</span> {{ game.ageMin }}</div>
-      <div><span class="orange-text">Difficulté:</span> {{ game.difficulty }}</div>
-    </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <!-- Image du jeu -->
+        <img class="game-image" [src]="game.image" alt="Game Image">
+      </div>
+      <div class="col-md-8">
+        <!-- Nom du jeu -->
+        <h1>{{ game.name }}</h1>
 
-    <!-- Deuxième colonne -->
-    <div class="column">
-      <div><span class="orange-text">Auteur:</span> {{ game.author }}</div>
-      <div><span class="orange-text">Joueurs:</span> de {{ game.playerMin }} à {{ game.playerMax }}</div>
-      <div><span class="orange-text">Durée d'une partie:</span> {{ game.partytime }} minutes</div>
-      <div><span class="orange-text">Description:</span> {{ game.description }}</div>
-      <div><span class="orange-text">Règles:</span> <a href="{{ game.rules }}" target="_blank">Lien vers les règles</a></div>
+        <!-- Détails du jeu -->
+        <div class="game-details">
+          <div class="game-detail">
+            <span class="orange-text">Type:</span> {{ game.type }}
+          </div>
+          <div class="game-detail">
+            <span class="orange-text">Catégorie:</span> {{ game.category }}
+          </div>
+          <div class="game-detail">
+            <span class="orange-text">Âge minimum:</span> {{ game.ageMin }}
+          </div>
+          <div class="game-detail">
+            <span class="orange-text">Difficulté:</span> {{ game.difficulty }}
+          </div>
+          <div class="game-detail">
+            <span class="orange-text">Nombre de joueurs:</span> {{ game.playerMin }} - {{ game.playerMax }}
+          </div>
+          <div class="game-detail">
+            <span class="orange-text">Temps de jeu:</span> {{ game.partytime }} minutes
+          </div>
+        </div>
+
+        <!-- Description du jeu -->
+        <div class="game-description">
+          <p>Description :</p>
+          <p>{{ game.description }}</p>
+        </div>
+
+        <!-- Lien vers les règles -->
+        <div class="game-rules">
+          <a href="{{ game.rules }}" target="_blank">Lien vers les règles</a>
+        </div>
+
+        <!-- Ajouter aux favoris -->
+        <div class="add-to-favorites">
+          <input type="checkbox" id="addToFavorites">
+          <label for="addToFavorites">Ajouter à mes favoris</label>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<div *ngIf="!game">
-  <p>Chargement en cours...</p>
 </div>
-

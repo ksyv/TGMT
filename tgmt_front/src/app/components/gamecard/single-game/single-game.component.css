@@ -1,82 +1,48 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #ff6100;
-}
-
-h1 {
-  color: #a916bb;
-}
-.errors {
-  list-style-type: none;
-  padding: 0;
-}
-
-.errors li {
-  color: red;
-}
-
-.alert {
-  margin-top: 1rem;
-}
-
-.btn-custom-gradient {
-  background: linear-gradient(140deg, #ff6100 40%, #a916bb 90%);
-  color: #fff; /* Couleur du texte, à adapter selon le contraste souhaité */
-  border: none; /* Retirer la bordure si nécessaire */
-  /* Autres styles de bordure, ombre, etc. */
-}
-
-/* Si besoin d'autres styles personnalisés */
 .container {
-  padding: 20px;
-}
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  margin: -10px; /* Ajustement pour les marges négatives */
-}
-
-.col-md-3 {
-  flex: 0 0 25%; /* Chaque jeu occupe 25% de la largeur */
-  max-width: 25%; /* Maximum de la largeur à 25% */
-  padding: 10px; /* Espacement entre les jeux */
-}
-
-.game-card {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #fff; /* Fond blanc */
+  margin-top: 20px;
 }
 
 .game-image {
   width: 100%;
   height: auto;
-  border-bottom: 1px solid #ccc;
-  cursor: pointer; /* Curseur pointer pour indiquer que l'image est cliquable */
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 24px;
+  margin-top: 0;
 }
 
 .game-details {
-  padding: 10px;
-  display: flex;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin-top: 20px;
 }
 
-.column {
-  flex: 1;
+.game-detail {
+  margin-bottom: 10px;
 }
 
-.game-title {
-  font-size: 1.2em;
+.game-detail .orange-text {
   font-weight: bold;
-  margin-bottom: 5px;
+  color: orange;
 }
 
-.orange-text {
-  color: #ff6100;
+.game-description {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin-top: 20px;
 }
 
+.game-rules {
+  margin-top: 20px;
+}
+
+.add-to-favorites {
+  margin-top: 20px;
+}
