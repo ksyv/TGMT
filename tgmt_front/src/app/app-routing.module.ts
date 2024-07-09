@@ -14,6 +14,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { CreateGameComponent } from './admin/create-game/create-game.component';
 import { UserManagementComponent } from './admin/user-management/user-management.component';
 import { UpdateGameComponent } from './components/update-game/update-game.component';
+import { AdminGuard } from './guards/admin.guard';
 
 const routes: Routes = [
   { path: 'sign-up', component: SignupComponent },
@@ -22,7 +23,7 @@ const routes: Routes = [
   { path: 'add-game', component: AddGameComponent },
   { path: 'edit-game', component: EditGameComponent },
   { path: 'single-game/:id', component: SingleGameComponent },
-  { path: 'games/:id/update', component: UpdateGameComponent },
+  { path: 'games/:id/update', component: UpdateGameComponent, canActivate: [AuthGuard, AdminGuard], data: { expectedRole: 'admin' }},
   { path: 'dashboard', component: DashboardComponent },
   { path: 'mes-informations', component: UserInfoComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
