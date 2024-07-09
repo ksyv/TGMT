@@ -4,10 +4,10 @@
     <li class="nav-item">
       <a class="nav-link" [class.active]="selectedTab === 'mes-informations'" (click)="selectedTab = 'mes-informations'">Mes Informations</a>
     </li>
-    <li>
+    <li *ngIf="isAdmin" class="nav-item">
       <a class="nav-link" [class.active]="selectedTab === 'create-game'" (click)="selectedTab = 'create-game'">Nouveau jeu</a>
     </li>
-    <li>
+    <li *ngIf="isAdmin" class="nav-item">
       <a class="nav-link" [class.active]="selectedTab === 'manage-users'" (click)="selectedTab = 'manage-users'">Gestion des Utilisateurs</a>
     </li>
     <!-- Ajoutez d'autres onglets si nécessaire -->
@@ -18,10 +18,10 @@
   <div *ngIf="selectedTab === 'mes-informations'">
     <app-user-info></app-user-info> <!-- Composant pour les informations de l'utilisateur -->
   </div>
-  <div *ngIf="selectedTab === 'create-game'">
+  <div *ngIf="selectedTab === 'create-game' && isAdmin">
     <app-create-game></app-create-game> <!-- Formulaire de création de jeu -->
   </div>
-  <div *ngIf="selectedTab === 'manage-users'">
+  <div *ngIf="selectedTab === 'manage-users' && isAdmin">
     <app-user-management></app-user-management> <!-- Composant pour la gestion des utilisateurs -->
   </div>
   <!-- Ajoutez les autres contenus pour les autres onglets -->
