@@ -7,7 +7,16 @@ const sendResetMail = require('../middlewares/email.service');
 const jwt = require('jsonwebtoken');
 
 router.get('/', (req, res) => {
-    res.status(200).send('Users endpoint. Use /signup, /login, /check, etc.');
+  User.find({})
+      .then(users => {
+          res.status(200).json(users);
+      })
+      .catch(error => {
+          res.status(500).json({
+              message: 'Erreur lors de la récupération des utilisateurs',
+              error: error.message
+          });
+      });
 });
 
 // POST - Inscription d'un nouvel utilisateur

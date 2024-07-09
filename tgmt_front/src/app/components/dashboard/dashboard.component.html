@@ -1,11 +1,14 @@
+<!-- dashboard.component.html -->
 <nav>
   <ul class="nav nav-tabs">
     <li class="nav-item">
       <a class="nav-link" [class.active]="selectedTab === 'mes-informations'" (click)="selectedTab = 'mes-informations'">Mes Informations</a>
     </li>
-    <li *ngIf="isAdmin" class="nav_item">
+    <li>
       <a class="nav-link" [class.active]="selectedTab === 'create-game'" (click)="selectedTab = 'create-game'">Nouveau jeu</a>
-
+    </li>
+    <li>
+      <a class="nav-link" [class.active]="selectedTab === 'manage-users'" (click)="selectedTab = 'manage-users'">Gestion des Utilisateurs</a>
     </li>
     <!-- Ajoutez d'autres onglets si nécessaire -->
   </ul>
@@ -13,10 +16,13 @@
 
 <div class="tab-content mt-3">
   <div *ngIf="selectedTab === 'mes-informations'">
-    <app-user-info></app-user-info> <!-- Assurez-vous que le sélecteur est correct -->
+    <app-user-info></app-user-info> <!-- Composant pour les informations de l'utilisateur -->
+  </div>
+  <div *ngIf="selectedTab === 'create-game'">
+    <app-create-game></app-create-game> <!-- Formulaire de création de jeu -->
+  </div>
+  <div *ngIf="selectedTab === 'manage-users'">
+    <app-user-management></app-user-management> <!-- Composant pour la gestion des utilisateurs -->
   </div>
   <!-- Ajoutez les autres contenus pour les autres onglets -->
-</div>
-<div *ngIf="selectedTab === 'create-game'">
-  <app-create-game></app-create-game>
 </div>

@@ -22,6 +22,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { ReactiveFormsModule } from '@angular/forms';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { CreateGameComponent } from './admin/create-game/create-game.component';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { CreateGameComponent } from './admin/create-game/create-game.component';
     UserInfoComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    CreateGameComponent
+    CreateGameComponent,
+    UserManagementComponent
   ],
   imports: [
     BrowserModule,

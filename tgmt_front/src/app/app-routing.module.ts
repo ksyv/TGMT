@@ -12,6 +12,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { AuthGuard } from './guards/auth.guard';
 import { CreateGameComponent } from './admin/create-game/create-game.component';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
 
 const routes: Routes = [
   { path: 'sign-up', component: SignupComponent },
@@ -36,6 +37,7 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         data: { expectedRole: 'admin' }
       },
+      { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard], data: { expectedRole: 'admin' } },
     ],
   },
   // Redirection par défaut
