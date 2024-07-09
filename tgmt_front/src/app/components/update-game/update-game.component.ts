@@ -9,18 +9,18 @@ import { Game } from '../../models/game';
   styleUrls: ['./update-game.component.css']
 })
 export class UpdateGameComponent implements OnInit {
-  gameId: string = ''; // Initialisation avec une chaîne vide
+  gameId: string = '';
   game: Game | undefined;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private gameService: GameService
-  ) { }
+  ) {
+    this.gameId = this.route.snapshot.paramMap.get('id') || '';
+  }
 
   ngOnInit(): void {
-    this.gameId = this.route.snapshot.paramMap.get('id') || '';
-
     if (this.gameId) {
       this.gameService.getGameById(this.gameId)
         .subscribe(
@@ -41,8 +41,8 @@ export class UpdateGameComponent implements OnInit {
       this.gameService.updateGame(this.game).subscribe(
         response => {
           console.log('Jeu mis à jour avec succès:', response);
-          // Redirection vers la page de détails du jeu après mise à jour
-          this.router.navigate(['/games', this.gameId]);
+          // Naviguer vers la page de détails du jeu après la mise à jour
+          this.router.navigate(['/single-game', this.gameId]); // Assure-toi que '/games' correspond à ta route de détails de jeu
         },
         error => {
           console.error('Erreur lors de la mise à jour du jeu:', error);
