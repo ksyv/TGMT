@@ -1,41 +1,54 @@
-.game-card {
-  height: 100%;
-  border: 1px solid #ccc;
+.search-filters {
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  overflow: hidden;
-  background-color: #fff; /* Fond blanc */
-  display: flex;
-  flex-direction: column; /* Afficher en colonne */
+  padding: 15px;
+  margin-bottom: 20px;
 }
 
-.game-image {
+.search-filters h4 {
+  margin-bottom: 15px;
+}
+
+.game-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: box-shadow 0.3s ease;
+  height: 100% ;
+}
+
+.game-card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.game-card .game-image {
   width: 100%;
-  height: 200px; /* Hauteur uniforme pour les images */
-  object-fit: contain; /* Assure que l'image s'ajuste sans la tronquer */
-  border-bottom: 1px solid #ccc;
-  cursor: pointer; /* Curseur pointer pour indiquer que l'image est cliquable */
+  height: auto;
+  border-radius: 5px;
 }
 
-.game-title {
-  font-size: 1.2em;
+.game-card .game-title {
+  font-size: 1.2rem;
   font-weight: bold;
-  margin: 10px;
-  text-align: center; /* Centrage horizontal */
+  margin-top: 0.5rem;
 }
 
-.game-details {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
+.game-card .game-details {
+  margin-top: 1rem;
 }
 
-.column {
-  flex: 1;
+.game-card .column {
+  margin-bottom: 0.5rem;
 }
 
-.orange-text {
-  color: #ff6100; /* Orange pour les textes des attributs */
+.game-card .orange-text {
+  font-weight: bold;
+  color: orange;
 }
+
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -44,3 +57,35 @@ body {
 a {
   color: #ff6100;
 }
+
+.errors {
+  list-style-type: none;
+  padding: 0;
+}
+
+.errors li {
+  color: red;
+}
+
+.alert {
+  margin-top: 1rem;
+}
+
+.btn-custom-gradient {
+  background: linear-gradient(140deg, #ff6100 40%, #a916bb 90%);
+  color: #fff; /* Couleur du texte, à adapter selon le contraste souhaité */
+  border: none; /* Retirer la bordure si nécessaire */
+  /* Autres styles de bordure, ombre, etc. */
+}
+
+.center-tabs {
+  display: flex;
+  justify-content: center; /* Centre les éléments horizontalement */
+  align-items: center; /* Centre les éléments verticalement (si besoin) */
+  height: 100%; /* Ajuste la hauteur si nécessaire */
+}
+h4 {
+  margin-bottom: 15px;
+  color: #ff6100;
+}
+/* Si besoin d'autres styles personnalisés */

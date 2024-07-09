@@ -1,39 +1,51 @@
-<div class="container">
+<div class="container mt-4">
   <h1 class="text-center mb-4">Jeux disponibles</h1>
-  <form (submit)="searchGames()">
-    <div class="row mb-4">
-      <div class="col-md-3">
-        <input type="text" class="form-control" placeholder="Nom" [(ngModel)]="searchParams.name" name="name">
+  <div class="search-filters p-3 mb-4 bg-light rounded">
+    <h4 class="text-center mb-4">Filtres de recherche</h4>
+    <form (submit)="onSearch()">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label for="name" class="form-label">Nom du jeu</label>
+          <input type="text" id="name" [(ngModel)]="searchName" name="name" class="form-control">
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="type" class="form-label">Type de jeu</label>
+          <input type="text" id="type" [(ngModel)]="searchType" name="type" class="form-control">
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="category" class="form-label">Catégorie</label>
+          <input type="text" id="category" [(ngModel)]="searchCategory" name="category" class="form-control">
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="ageMin" class="form-label">Âge minimum</label>
+          <input type="number" id="ageMin" [(ngModel)]="searchAgeMin" name="ageMin" class="form-control">
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="difficulty" class="form-label">Difficulté</label>
+          <input type="text" id="difficulty" [(ngModel)]="searchDifficulty" name="difficulty" class="form-control">
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="author" class="form-label">Auteur</label>
+          <input type="text" id="author" [(ngModel)]="searchAuthor" name="author" class="form-control">
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="playerMin" class="form-label">Nombre minimum de joueurs</label>
+          <input type="number" id="playerMin" [(ngModel)]="searchPlayerMin" name="playerMin" class="form-control">
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="playerMax" class="form-label">Nombre maximum de joueurs</label>
+          <input type="number" id="playerMax" [(ngModel)]="searchPlayerMax" name="playerMax" class="form-control">
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="partytime" class="form-label">Durée de la partie (minutes)</label>
+          <input type="number" id="partytime" [(ngModel)]="searchPartytime" name="partytime" class="form-control">
+        </div>
       </div>
-      <div class="col-md-3">
-        <input type="text" class="form-control" placeholder="Type" [(ngModel)]="searchParams.type" name="type">
-      </div>
-      <div class="col-md-3">
-        <input type="text" class="form-control" placeholder="Catégorie" [(ngModel)]="searchParams.category" name="category">
-      </div>
-      <div class="col-md-3">
-        <input type="number" class="form-control" placeholder="Âge minimum" [(ngModel)]="searchParams.ageMin" name="ageMin">
-      </div>
-      <div class="col-md-3">
-        <input type="text" class="form-control" placeholder="Difficulté" [(ngModel)]="searchParams.difficulty" name="difficulty">
-      </div>
-      <div class="col-md-3">
-        <input type="text" class="form-control" placeholder="Auteur" [(ngModel)]="searchParams.author" name="author">
-      </div>
-      <div class="col-md-3">
-        <input type="number" class="form-control" placeholder="Nombre de joueurs minimum" [(ngModel)]="searchParams.playerMin" name="playerMin">
-      </div>
-      <div class="col-md-3">
-        <input type="number" class="form-control" placeholder="Nombre de joueurs maximum" [(ngModel)]="searchParams.playerMax" name="playerMax">
-      </div>
-      <div class="col-md-3">
-        <input type="number" class="form-control" placeholder="Temps de jeu maximum (min)" [(ngModel)]="searchParams.partytime" name="partytime">
-      </div>
-      <div class="col-md-3">
-        <button type="submit" class="btn btn-primary">Rechercher</button>
-      </div>
-    </div>
-  </form>
+      <button type="submit" class="btn btn-primary btn-custom-gradient w-100 mt-3">Rechercher</button>
+    </form>
+  </div>
+
+
   <div class="row">
     <!-- Utilisation de *ngFor pour itérer sur la liste de jeux -->
     <div class="col-md-3" *ngFor="let game of games">
