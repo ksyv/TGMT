@@ -27,18 +27,32 @@ export class CreateGameComponent implements OnInit {
       playerMin: ['', [Validators.required, Validators.min(1)]],
       playerMax: ['', [Validators.required, Validators.min(1)]],
       description: ['', Validators.required],
-      image: ['', Validators.required],
+      image: [null, Validators.required],
       partytime: ['', [Validators.required, Validators.min(1)]],
       rules: ['', Validators.required],
-      resourcesLink: this.fb.array([]),
+      resourcesLink: [[]],
     });
   }
 
   ngOnInit(): void {}
 
+  onFileChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.createGameForm.patchValue({
+        image: file
+      });
+    }
+  }
+
   onSubmit(): void {
     if (this.createGameForm.valid) {
-      this.gameService.createGame(this.createGameForm.value).subscribe(
+      const formData = new FormData();
+      Object.keys(this.createGameForm.controls).forEach(key => {
+        formData.append(key, this.createGameForm.get(key)?.value);
+      });
+
+      this.gameService.createGame(formData).subscribe(
         response => {
           console.log('Game created successfully:', response);
           this.router.navigate(['/admin/dashboard']);

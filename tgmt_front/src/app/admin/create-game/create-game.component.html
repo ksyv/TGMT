@@ -2,59 +2,57 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-lg-6">
-      <h1 class="text-center mb-4">Mes Informations</h1>
-      <form [formGroup]="createGameForm" (ngSubmit)="onSubmit()">
-        <div>
+      <h1 class="text-center mb-4">Créer un Nouveau Jeu</h1>
+      <form [formGroup]="createGameForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+        <div class="form-group">
           <label for="name">Nom du jeu</label>
           <input id="name" formControlName="name" class="form-control" type="text">
         </div>
-        <div>
+        <div class="form-group">
           <label for="type">Type</label>
           <input id="type" formControlName="type" class="form-control" type="text">
         </div>
-        <div>
+        <div class="form-group">
           <label for="category">Catégorie</label>
           <input id="category" formControlName="category" class="form-control" type="text">
         </div>
-        <div>
+        <div class="form-group">
           <label for="ageMin">Âge minimum</label>
           <input id="ageMin" formControlName="ageMin" class="form-control" type="number">
         </div>
-        <div>
+        <div class="form-group">
           <label for="difficulty">Difficulté</label>
           <input id="difficulty" formControlName="difficulty" class="form-control" type="text">
         </div>
-        <div>
+        <div class="form-group">
           <label for="author">Auteur</label>
           <input id="author" formControlName="author" class="form-control" type="text">
         </div>
-        <div>
+        <div class="form-group">
           <label for="playerMin">Nombre minimum de joueurs</label>
           <input id="playerMin" formControlName="playerMin" class="form-control" type="number">
         </div>
-        <div>
+        <div class="form-group">
           <label for="playerMax">Nombre maximum de joueurs</label>
           <input id="playerMax" formControlName="playerMax" class="form-control" type="number">
         </div>
-        <div>
+        <div class="form-group">
           <label for="description">Description</label>
           <textarea id="description" class="form-control" formControlName="description"></textarea>
         </div>
-        <div>
+        <div class="form-group">
           <label for="image">Image</label>
-          <input id="image" formControlName="image" class="form-control" type="text">
+          <input id="image" (change)="onFileChange($event)" class="form-control" type="file">
         </div>
-        <div>
+        <div class="form-group">
           <label for="partytime">Temps de partie (minutes)</label>
           <input id="partytime" formControlName="partytime" class="form-control" type="number">
         </div>
-        <div>
+        <div class="form-group">
           <label for="rules">Lien vers les règles</label>
           <input id="rules" formControlName="rules" class="form-control" type="text">
         </div>
-        <div>
-          <button class="btn btn-success btn-custom-gradient w-100 mt-3" type="submit">Créer le jeu</button>
-        </div>
+        <button class="btn btn-success btn-custom-gradient w-100 mt-3" type="submit">Créer le jeu</button>
       </form>
     </div>
   </div>
