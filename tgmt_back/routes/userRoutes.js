@@ -116,4 +116,23 @@ router.post('/reset-password/:token', async (req, res) => {
       res.status(400).json({ message: 'Jeton invalide ou expiré' });
   }
 });
+router.get('/search', async (req, res) => {
+  const term = req.query.term; // Récupère le terme de recherche depuis les query parameters
+
+  try {
+    // Utilise une expression régulière pour rechercher le terme dans le nom d'utilisateur, le prénom et le nom
+    const users = await User.find({
+      $or: [
+        { username: { $regex: term, $options: 'i' } }, // 'i' pour la recherche insensible à la casse
+        { firstname: { $regex: term, $options: 'i' } },
+        { lastname: { $regex: term, $options: 'i' } }
+      ]
+    });
+
+    res.status(200).json(users);
+  } catch (err) {
+    console.error('Error searching users:', err);
+    res.status(500).json({ message: 'Erreur lors de la recherche des utilisateurs' });
+  }
+});
 module.exports = router;

@@ -8,7 +8,7 @@ import { User } from '../models/users';
 })
 export class UserService {
 
-  private apiUrl = 'http://localhost:3000/users'; // Assurez-vous que l'URL correspond à votre backend
+  private apiUrl = 'http://localhost:3000/users';
 
   constructor(private http: HttpClient) { }
 
@@ -16,12 +16,12 @@ export class UserService {
     return this.http.get<User[]>(this.apiUrl);
   }
 
-  updateUser(user: User): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${user._id}`, user);
+  updateUserRole(userId: string, newRole: string): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${userId}`, { role: newRole });
   }
 
-  // Nouvelle méthode pour mettre à jour le rôle de l'utilisateur
-  updateUserRole(userId: string, newRole: string): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${userId}/update-role`, { role: newRole });
+  // Nouvelle méthode pour la recherche d'utilisateurs
+  searchUsers(searchTerm: string): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/search?term=${searchTerm}`);
   }
 }

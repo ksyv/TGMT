@@ -28,14 +28,10 @@ export class UserManagementComponent implements OnInit {
   }
 
   onRoleChange(user: User): void {
-    // Inverse le rôle de l'utilisateur
     const newRole = user.role === 'admin' ? 'user' : 'admin';
-
-    // Appelez le service pour mettre à jour le rôle de l'utilisateur
     this.userService.updateUserRole(user._id, newRole).subscribe(
       (updatedUser) => {
         console.log('User role updated successfully:', updatedUser);
-        // Optionnel : Mettez à jour localement this.users si nécessaire
         const index = this.users.findIndex(u => u._id === updatedUser._id);
         if (index !== -1) {
           this.users[index] = updatedUser;
@@ -45,5 +41,22 @@ export class UserManagementComponent implements OnInit {
         console.error('Error updating user role:', error);
       }
     );
+  }
+
+  // Méthode pour la recherche d'utilisateur
+  searchUser(searchTerm: string): void {
+    if (searchTerm.trim()) {
+      this.userService.searchUsers(searchTerm).subscribe(
+        (users: User[]) => {
+          this.users = users;
+        },
+        (error) => {
+          console.error('Error searching users:', error);
+        }
+      );
+    } else {
+      // Recharge tous les utilisateurs si le champ de recherche est vide
+      this.loadUsers();
+    }
   }
 }

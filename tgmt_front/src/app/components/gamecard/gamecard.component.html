@@ -1,4 +1,5 @@
 <div class="container">
+  <h1 class="text-center mb-4">Jeux disponibles</h1>
   <div class="row">
     <!-- Utilisation de *ngFor pour itérer sur la liste de jeux -->
     <div class="col-md-3" *ngFor="let game of games">
@@ -10,11 +11,13 @@
           <img class="game-image" [src]="game.image" alt="Game Image">
         </a>
 
+        <!-- Nom du jeu -->
+        <div class="game-title">{{ game.name }}</div>
+
         <!-- Détails du jeu en deux colonnes -->
         <div class="game-details">
           <!-- Première colonne -->
           <div class="column">
-            <div class="game-title">{{ game.name }}</div>
             <div><span class="orange-text">Type:</span> {{ game.type }}</div>
             <div><span class="orange-text">Catégorie:</span> {{ game.category }}</div>
           </div>
