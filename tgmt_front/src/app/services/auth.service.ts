@@ -94,8 +94,8 @@ export class AuthService {
     this.router.navigateByUrl('/sign-in'); // Rediriger vers la page de connexion
   }
 
-  getRole() {
-    return this.role$;
+  getRole(): Observable<string> {
+    return this.role$; 
   }
 
   getUserId() {

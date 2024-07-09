@@ -42,13 +42,18 @@
           <a href="{{ game.rules }}" target="_blank">Lien vers les règles</a>
         </div>
 
+
         <!-- Ajouter aux favoris -->
         <div class="add-to-favorites">
-          <input type="checkbox" id="addToFavorites">
-          <label for="addToFavorites">Ajouter à mes favoris</label>
+          <!-- ... -->
+        </div>
+
+        <!-- Boutons pour les administrateurs -->
+        <div *ngIf="isAdmin">
+          <button class="btn btn-primary btn-custom-gradient w-100 mt-3" (click)="updateGame()">Mise à jour</button>
+          <button class="btn btn-danger btn-custom-gradient w-100 mt-3" (click)="deleteGame()">Supprimer</button>
         </div>
       </div>
     </div>
   </div>
-
 </div>

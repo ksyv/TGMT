@@ -33,5 +33,14 @@ export class GameService {
   createGame(gameData: FormData): Observable<Game> {
     return this.http.post<Game>(`${this.baseUrl}`, gameData);
   }
-}
 
+  updateGame(game: Game): Observable<Game> {
+    const url = `${this.baseUrl}/${game._id}`; // Assure-toi que ton modèle Game a un champ _id pour l'identifiant
+    return this.http.put<Game>(url, game);
+  }
+
+  deleteGame(gameId: string): Observable<any> {
+    const url = `${this.baseUrl}/${gameId}`;
+    return this.http.delete(url);
+  }
+}
