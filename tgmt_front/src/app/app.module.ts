@@ -24,6 +24,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { CreateGameComponent } from './admin/create-game/create-game.component';
 import { UserManagementComponent } from './admin/user-management/user-management.component';
 import { UpdateGameComponent } from './components/update-game/update-game.component';
+import { FavoritesComponent } from './components/dashboard/favorites/favorites.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { UpdateGameComponent } from './components/update-game/update-game.compon
     ResetPasswordComponent,
     CreateGameComponent,
     UserManagementComponent,
-    UpdateGameComponent
+    UpdateGameComponent,
+    FavoritesComponent
   ],
   imports: [
     BrowserModule,

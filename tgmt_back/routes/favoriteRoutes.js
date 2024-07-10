@@ -43,5 +43,15 @@ router.post('/add-to-favorites', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+router.get('/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const favorites = await Favorite.find({ userId: userId }).populate('gameId').exec();
+    res.send(favorites);
+  } catch (err) {
+    res.status(500).send({ message: 'Error fetching favorites' });
+  }
+});
 
 module.exports = router;

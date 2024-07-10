@@ -10,6 +10,9 @@
     <li *ngIf="isAdmin" class="nav-item">
       <a class="nav-link" [class.active]="selectedTab === 'manage-users'" (click)="selectedTab = 'manage-users'">Gestion des Utilisateurs</a>
     </li>
+    <li class="nav-item">
+      <a  class="nav-link" [class.active]="selectedTab === 'favorites'" (click)="selectedTab = 'favorites'">Mes jeux favoris</a>
+    </li>
     <!-- Ajoutez d'autres onglets si nécessaire -->
   </ul>
 </nav>
@@ -23,6 +26,9 @@
   </div>
   <div *ngIf="selectedTab === 'manage-users' && isAdmin">
     <app-user-management></app-user-management> <!-- Composant pour la gestion des utilisateurs -->
+  </div>
+  <div *ngIf="selectedTab === 'favorites'">
+    <app-favorites></app-favorites> <!-- Composant pour les jeux favoris -->
   </div>
   <!-- Ajoutez les autres contenus pour les autres onglets -->
 </div>

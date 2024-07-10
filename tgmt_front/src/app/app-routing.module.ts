@@ -15,6 +15,7 @@ import { CreateGameComponent } from './admin/create-game/create-game.component';
 import { UserManagementComponent } from './admin/user-management/user-management.component';
 import { UpdateGameComponent } from './components/update-game/update-game.component';
 import { AdminGuard } from './guards/admin.guard';
+import { FavoritesComponent } from './components/dashboard/favorites/favorites.component';
 
 const routes: Routes = [
   { path: 'sign-up', component: SignupComponent },
@@ -43,6 +44,7 @@ const routes: Routes = [
       { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard], data: { expectedRole: 'admin' } },
     ],
   },
+  { path: 'dashboard/favorites', component: FavoritesComponent},
   // Redirection par défaut
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
 ];

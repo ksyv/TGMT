@@ -1,0 +1,21 @@
+<div class="favorites-container">
+  <div *ngIf="favoriteGames.length > 0; else noFavorites">
+    <div class="row">
+      <div *ngFor="let favorite of favoriteGames" class="col-md-3 mb-4">
+        <div class="game-card">
+          <!-- Lien cliquable vers la page du jeu -->
+          <a [routerLink]="['/single-game', favorite.gameId._id]">
+            <!-- Image du jeu avec lien -->
+            <img class="game-image" [src]="favorite.gameId.image" alt="Game Image">
+          </a>
+          <!-- Nom du jeu -->
+          <div class="game-title">{{ favorite.gameId.name }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noFavorites>
+    <p>Vous n'avez pas de jeux favoris pour le moment.</p>
+  </ng-template>
+</div>
