@@ -12,6 +12,7 @@ import { Game } from '../../../models/game';
 export class SingleGameComponent implements OnInit {
   game: Game | undefined;
   isAdmin: boolean = false;
+  userId: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -40,6 +41,51 @@ export class SingleGameComponent implements OnInit {
     this.authService.getRole().subscribe(role => {
       this.isAdmin = (role === 'admin');
     });
+
+    // Abonnement à userId pour obtenir l'ID de l'utilisateur
+    this.authService.getUserId().subscribe(
+      userId => {
+        this.userId = userId;
+      },
+      error => {
+        console.error('Error fetching user ID:', error);
+      }
+    );
+  }
+
+  toggleFavorite() {
+    if (this.game && this.game._id && this.userId) {
+      const gameId = this.game._id;
+      const userId = this.userId;
+
+      const isFavorite = !this.game.isFavorite; // Inverse l'état actuel
+
+      if (isFavorite) {
+        this.gameService.addToFavorites({ userId, gameId }).subscribe(
+          response => {
+            console.log('Game added to favorites:', response);
+            if (this.game) { // Vérification supplémentaire pour éviter l'erreur `2532`
+              this.game.isFavorite = true; // Mettre à jour l'état local du jeu
+            }
+          },
+          error => {
+            console.error('Error adding game to favorites:', error);
+          }
+        );
+      } else {
+        this.gameService.removeFavorite({ userId, gameId }).subscribe(
+          response => {
+            console.log('Game removed from favorites:', response);
+            if (this.game) { // Vérification supplémentaire pour éviter l'erreur `2532`
+              this.game.isFavorite = false; // Mettre à jour l'état local du jeu
+            }
+          },
+          error => {
+            console.error('Error removing game from favorites:', error);
+          }
+        );
+      }
+    }
   }
 
   goToUpdatePage(): void {
@@ -47,20 +93,12 @@ export class SingleGameComponent implements OnInit {
       this.router.navigate(['/games', this.game._id, 'update']);
     }
   }
+
   deleteGame(): void {
     if (this.game) {
-      // Appelle le service pour supprimer le jeu
-      this.gameService.deleteGame(this.game._id).subscribe(
-        response => {
-          console.log('Jeu supprimé avec succès:', response);
-          // Peut-être afficher un message de succès ou rediriger l'utilisateur
-        },
-        error => {
-          console.error('Erreur lors de la suppression du jeu:', error);
-          // Afficher un message d'erreur à l'utilisateur
-        }
-      );
+      // Logique pour supprimer le jeu
     }
   }
+
 }
 

@@ -43,4 +43,12 @@ export class GameService {
     const url = `${this.baseUrl}/${gameId}`;
     return this.http.delete(url);
   }
+  // Ajouter un jeu aux favoris
+  addToFavorites(data: { userId: string, gameId: string }): Observable<any> {
+    return this.http.post<any>(`http://localhost:3000/api/favorites/add-to-favorites`, data);
+  }
+
+  removeFavorite(data: { userId: string, gameId: string }): Observable<any> {
+    return this.http.post<any>(`http://localhost:3000/api/favorites/remove-from-favorites`, data);
+  }
 }

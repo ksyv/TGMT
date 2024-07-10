@@ -15,4 +15,5 @@ export interface Game {
   resourcesLink: string[];
   createdAt: Date;
   tables: any[]; // Ajustez selon le besoin de votre application
+  isFavorite: boolean;
 }

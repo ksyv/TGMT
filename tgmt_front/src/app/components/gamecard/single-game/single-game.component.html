@@ -53,6 +53,10 @@
           <button class="btn btn-primary btn-custom-gradient w-100 mt-3" (click)="goToUpdatePage()">Mise à jour</button>
           <button class="btn btn-danger btn-custom-gradient w-100 mt-3" (click)="deleteGame()">Supprimer</button>
         </div>
+        <button (click)="toggleFavorite()">
+          <span *ngIf="game.isFavorite">Retirer des favoris</span>
+          <span *ngIf="!game.isFavorite">Ajouter aux favoris</span>
+        </button>
       </div>
       </div>
     </div>

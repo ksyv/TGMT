@@ -6,7 +6,7 @@ var logger = require('morgan');
 const mongoose = require('mongoose'); // Import mongoose
 const dotenv = require('dotenv').config(); // Import dotenv
 const cors = require('cors');
-
+const favoriteRoutes = require('./routes/favoriteRoutes');
 
 // Connect to MongoDB
 mongoose.connect(process.env.DATABASE)
@@ -36,6 +36,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter); // Utiliser userRoutes sur le chemin '/users'
 app.use('/api/games', gameRouter); // Utiliser gameRoutes sur le chemin '/games'
 app.use('/api/tables', tableRouter); // Utiliser tableRoutes sur le chemin '/tables'
+app.use('/api/favorites', favoriteRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
