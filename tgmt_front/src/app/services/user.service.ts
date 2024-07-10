@@ -17,7 +17,7 @@ export class UserService {
   }
 
   updateUserRole(userId: string, newRole: string): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${userId}`, { role: newRole });
+    return this.http.put<User>(`${this.apiUrl}/${userId}/update-role`, { role: newRole });
   }
 
   // Nouvelle méthode pour la recherche d'utilisateurs
