@@ -125,7 +125,18 @@ export class SingleGameComponent implements OnInit {
 
   deleteGame(): void {
     if (this.game) {
-      // Logique pour supprimer le jeu
+      this.gameService.deleteGame(this.game._id)
+        .subscribe(
+          () => {
+            console.log('Game deleted successfully');
+            // Redirigez l'utilisateur vers une autre page ou mettez à jour la liste de jeux, etc.
+            this.router.navigate(['/gamecard']); // Exemple de redirection vers la liste des jeux
+          },
+          error => {
+            console.error('Error deleting game:', error);
+            // Gérez l'erreur ici (par exemple, affichez un message à l'utilisateur)
+          }
+        );
     }
   }
 
