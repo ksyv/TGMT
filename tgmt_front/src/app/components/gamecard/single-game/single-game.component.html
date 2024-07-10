@@ -34,7 +34,7 @@
         <!-- Description du jeu -->
         <div class="game-description">
           <p>Description :</p>
-          <p [innerHTML]="game.description"></p>
+          <p [innerHTML]="getSafeDescription()"></p>
         </div>
 
         <!-- Lien vers les règles -->

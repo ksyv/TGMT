@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GameService } from '../../../services/game.service';
 import { AuthService } from '../../../services/auth.service';
 import { Game } from '../../../models/game';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser'; // Importer DomSanitizer
 
 @Component({
   selector: 'app-single-game',
@@ -19,7 +20,8 @@ export class SingleGameComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private gameService: GameService,
-    private authService: AuthService
+    private authService: AuthService,
+    private sanitizer: DomSanitizer // Injecter DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -117,6 +119,13 @@ export class SingleGameComponent implements OnInit {
     }
   }
 
+  getSafeDescription(): SafeHtml | string {
+    if (this.game && this.game.description) {
+      return this.sanitizer.bypassSecurityTrustHtml(this.game.description);
+    }
+    return ''; // Retourner une chaîne vide ou autre valeur par défaut si game.description est null ou undefined
+  }
+
   goToUpdatePage(): void {
     if (this.game && this.game._id) {
       this.router.navigate(['/games', this.game._id, 'update']);
@@ -129,16 +138,15 @@ export class SingleGameComponent implements OnInit {
         .subscribe(
           () => {
             console.log('Game deleted successfully');
-            // Redirigez l'utilisateur vers une autre page ou mettez à jour la liste de jeux, etc.
+            // Rediriger l'utilisateur vers une autre page ou mettre à jour la liste des jeux, etc.
             this.router.navigate(['/gamecard']); // Exemple de redirection vers la liste des jeux
           },
           error => {
             console.error('Error deleting game:', error);
-            // Gérez l'erreur ici (par exemple, affichez un message à l'utilisateur)
+            // Gérer l'erreur ici (par exemple, afficher un message à l'utilisateur)
           }
         );
     }
   }
 
 }
-
