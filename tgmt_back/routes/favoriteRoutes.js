@@ -53,5 +53,36 @@ router.get('/:userId', async (req, res) => {
     res.status(500).send({ message: 'Error fetching favorites' });
   }
 });
+router.post('/is-favorite', async (req, res) => {
+  const { userId, gameId } = req.body;
 
+  try {
+    const existingFavorite = await Favorite.findOne({ userId, gameId });
+
+    if (existingFavorite) {
+      res.status(200).json({ isFavorite: true });
+    } else {
+      res.status(200).json({ isFavorite: false });
+    }
+  } catch (err) {
+    console.error('Error checking favorite status:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+router.post('/remove-from-favorites', async (req, res) => {
+  const { userId, gameId } = req.body;
+
+  try {
+    const deletedFavorite = await Favorite.findOneAndDelete({ userId, gameId });
+
+    if (!deletedFavorite) {
+      return res.status(400).json({ message: 'Game is not in favorites' });
+    }
+
+    res.status(200).json({ message: 'Game removed from favorites' });
+  } catch (err) {
+    console.error('Error removing game from favorites:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 module.exports = router;

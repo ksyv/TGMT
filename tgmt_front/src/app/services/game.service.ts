@@ -55,4 +55,9 @@ export class GameService {
   getFavorites(userId: string): Observable<any[]> {
     return this.http.get<any[]>(`http://localhost:3000/api/favorites/${userId}`);
   }
+  isFavorite(data: { userId: string, gameId: string }): Observable<any> {
+    return this.http.post<any>(`http://localhost:3000/api/favorites/is-favorite`, data);
+  }
+
 }
+

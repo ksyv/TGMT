@@ -13,6 +13,7 @@ export class SingleGameComponent implements OnInit {
   game: Game | undefined;
   isAdmin: boolean = false;
   userId: string = '';
+  isInFavorites: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,15 +26,7 @@ export class SingleGameComponent implements OnInit {
     const gameId = this.route.snapshot.paramMap.get('id');
 
     if (gameId) {
-      this.gameService.getGameById(gameId)
-        .subscribe(
-          response => {
-            this.game = response.result;
-          },
-          error => {
-            console.error('Error fetching game details:', error);
-          }
-        );
+      this.loadGameDetails(gameId);
     } else {
       console.error('No game ID provided');
     }
@@ -42,10 +35,12 @@ export class SingleGameComponent implements OnInit {
       this.isAdmin = (role === 'admin');
     });
 
-    // Abonnement à userId pour obtenir l'ID de l'utilisateur
     this.authService.getUserId().subscribe(
       userId => {
-        this.userId = userId;
+        this.userId = userId || '';
+        if (this.game) {
+          this.checkFavoriteStatus();
+        }
       },
       error => {
         console.error('Error fetching user ID:', error);
@@ -53,32 +48,66 @@ export class SingleGameComponent implements OnInit {
     );
   }
 
-  toggleFavorite() {
+  loadGameDetails(gameId: string): void {
+    this.gameService.getGameById(gameId).subscribe(
+      response => {
+        this.game = response.result;
+        if (this.userId) {
+          this.checkFavoriteStatus();
+        }
+      },
+      error => {
+        console.error('Error fetching game details:', error);
+      }
+    );
+  }
+
+  checkFavoriteStatus(): void {
+    if (this.game && this.userId) {
+      this.gameService.isFavorite({ userId: this.userId, gameId: this.game._id }).subscribe(
+        (response: any) => {
+          this.isInFavorites = response.isFavorite;
+        },
+        (error: any) => {
+          console.error('Error checking favorite status:', error);
+        }
+      );
+    }
+  }
+
+  addToFavorites(): void {
     if (this.game && this.game._id && this.userId) {
-      const gameId = this.game._id;
-      const userId = this.userId;
+      if (this.isInFavorites) {
+        alert('Ce jeu est déjà dans vos favoris.');
+      } else {
+        const gameId = this.game._id;
+        const userId = this.userId;
 
-      const isFavorite = !this.game.isFavorite; // Inverse l'état actuel
-
-      if (isFavorite) {
         this.gameService.addToFavorites({ userId, gameId }).subscribe(
           response => {
             console.log('Game added to favorites:', response);
-            if (this.game) { // Vérification supplémentaire pour éviter l'erreur `2532`
-              this.game.isFavorite = true; // Mettre à jour l'état local du jeu
-            }
+            this.isInFavorites = true;
           },
           error => {
             console.error('Error adding game to favorites:', error);
           }
         );
+      }
+    }
+  }
+
+  removeFromFavorites(): void {
+    if (this.game && this.game._id && this.userId) {
+      if (!this.isInFavorites) {
+        alert('Ce jeu n\'est pas actuellement dans vos favoris.');
       } else {
+        const gameId = this.game._id;
+        const userId = this.userId;
+
         this.gameService.removeFavorite({ userId, gameId }).subscribe(
           response => {
             console.log('Game removed from favorites:', response);
-            if (this.game) { // Vérification supplémentaire pour éviter l'erreur `2532`
-              this.game.isFavorite = false; // Mettre à jour l'état local du jeu
-            }
+            this.isInFavorites = false;
           },
           error => {
             console.error('Error removing game from favorites:', error);

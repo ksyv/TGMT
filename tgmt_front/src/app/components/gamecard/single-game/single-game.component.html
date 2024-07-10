@@ -42,10 +42,10 @@
           <a href="{{ game.rules }}" target="_blank">Lien vers les règles</a>
         </div>
 
-
-        <!-- Ajouter aux favoris -->
-        <div class="add-to-favorites">
-          <!-- ... -->
+        <!-- Boutons pour ajouter et retirer des favoris -->
+        <div>
+          <button class="btn btn-primary btn-custom-gradient w-100 mt-3" *ngIf="!isInFavorites" (click)="addToFavorites()">Ajouter aux favoris</button>
+          <button class="btn btn-primary btn-custom-gradient w-100 mt-3" *ngIf="isInFavorites" (click)="removeFromFavorites()">Retirer des favoris</button>
         </div>
 
         <!-- Boutons pour les administrateurs -->
@@ -53,12 +53,9 @@
           <button class="btn btn-primary btn-custom-gradient w-100 mt-3" (click)="goToUpdatePage()">Mise à jour</button>
           <button class="btn btn-danger btn-custom-gradient w-100 mt-3" (click)="deleteGame()">Supprimer</button>
         </div>
-        <button (click)="toggleFavorite()">
-          <span *ngIf="game.isFavorite">Retirer des favoris</span>
-          <span *ngIf="!game.isFavorite">Ajouter aux favoris</span>
-        </button>
-      </div>
+
       </div>
     </div>
   </div>
+</div>
 
