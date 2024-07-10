@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameService } from '../../services/game.service';
 import { Game } from '../../models/game';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-update-game',
@@ -12,15 +12,29 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class UpdateGameComponent implements OnInit {
   gameId: string = '';
   game: Game | undefined;
-  createGameForm: FormGroup | any;
+  gameForm: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private gameService: GameService
-
+    private gameService: GameService,
+    private fb: FormBuilder
   ) {
     this.gameId = this.route.snapshot.paramMap.get('id') || '';
+    this.gameForm = this.fb.group({
+      name: [''],
+      type: [''],
+      category: [''],
+      ageMin: [''],
+      difficulty: [''],
+      author: [''],
+      playerMin: [''],
+      playerMax: [''],
+      description: [''],
+      image: [''],
+      partytime: [''],
+      rules: ['']
+    });
   }
 
   ngOnInit(): void {
@@ -29,6 +43,7 @@ export class UpdateGameComponent implements OnInit {
         .subscribe(
           response => {
             this.game = response.result;
+            this.populateForm();
           },
           error => {
             console.error('Error fetching game details:', error);
@@ -38,26 +53,46 @@ export class UpdateGameComponent implements OnInit {
       console.error('No game ID provided');
     }
   }
+
+  populateForm(): void {
+    if (this.game) {
+      this.gameForm.patchValue({
+        name: this.game.name,
+        type: this.game.type,
+        category: this.game.category,
+        ageMin: this.game.ageMin,
+        difficulty: this.game.difficulty,
+        author: this.game.author,
+        playerMin: this.game.playerMin,
+        playerMax: this.game.playerMax,
+        description: this.game.description,
+        partytime: this.game.partytime,
+        rules: this.game.rules,
+        image: this.game.image // Pré-remplir l'image dans le formulaire
+      });
+    }
+  }
+
   onFileChange(event: any): void {
     const file = event.target.files[0];
     if (file) {
-      this.createGameForm.patchValue({
+      this.gameForm.patchValue({
         image: file
       });
     }
   }
 
   updateGame(): void {
-    if (this.game) {
-      this.gameService.updateGame(this.game).subscribe(
+    if (this.gameForm.valid) {
+      const updatedGame = { ...this.game, ...this.gameForm.value };
+
+      this.gameService.updateGame(updatedGame).subscribe(
         response => {
           console.log('Jeu mis à jour avec succès:', response);
-          // Naviguer vers la page de détails du jeu après la mise à jour
-          this.router.navigate(['/single-game', this.gameId]); // Assure-toi que '/games' correspond à ta route de détails de jeu
+          this.router.navigate(['/single-game', this.gameId]);
         },
         error => {
           console.error('Erreur lors de la mise à jour du jeu:', error);
-          // Afficher un message d'erreur à l'utilisateur
         }
       );
     }

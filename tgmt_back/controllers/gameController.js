@@ -118,11 +118,11 @@ module.exports = {
     // Mettre à jour un jeu existant
     updateGame: (req, res) => {
         const gameId = req.params.id;
-        var gameData = req.body;
-
+        const gameData = req.body;
+    
         if (req.file) {
             // Mise à jour avec une nouvelle image
-            Game.findById(gameId, { image: 1 })
+            Game.findById(gameId)
                 .then(foundGame => {
                     if (!foundGame) {
                         return res.status(404).json({
@@ -130,13 +130,17 @@ module.exports = {
                             message: 'Game not found',
                         });
                     }
-
-                    // Supprimer l'ancienne image
-                    const oldImage = foundGame.image.split('/images/')[1];
-                    fs.unlinkSync(`public/images/${oldImage}`);
-
+    
+                    // Supprimer l'ancienne image s'il y en a une
+                    if (foundGame.image) {
+                        const oldImagePath = foundGame.image.split('/images/')[1];
+                        fs.unlinkSync(`public/images/${oldImagePath}`);
+                        console.log(`Ancienne image supprimée : ${oldImagePath}`);
+                    }
+    
                     // Mettre à jour avec la nouvelle image
                     gameData.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+    
                     return Game.findByIdAndUpdate(gameId, gameData, { new: true });
                 })
                 .then(updatedGame => {
@@ -146,6 +150,7 @@ module.exports = {
                             message: 'Game not found',
                         });
                     }
+    
                     res.status(200).json({
                         status: 200,
                         message: 'Game updated successfully',
@@ -153,6 +158,7 @@ module.exports = {
                     });
                 })
                 .catch(error => {
+                    console.error('Erreur lors de la mise à jour du jeu :', error);
                     res.status(500).json({
                         status: 500,
                         message: 'Error when updating game',
@@ -169,6 +175,7 @@ module.exports = {
                             message: 'Game not found',
                         });
                     }
+    
                     res.status(200).json({
                         status: 200,
                         message: 'Game updated successfully',
@@ -176,6 +183,7 @@ module.exports = {
                     });
                 })
                 .catch(error => {
+                    console.error('Erreur lors de la mise à jour du jeu :', error);
                     res.status(500).json({
                         status: 500,
                         message: 'Error when updating game',
@@ -184,6 +192,8 @@ module.exports = {
                 });
         }
     },
+    
+    
 
     // Supprimer un jeu
     deleteGame: (req, res) => {
