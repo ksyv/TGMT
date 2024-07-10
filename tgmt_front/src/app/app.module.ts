@@ -25,6 +25,7 @@ import { CreateGameComponent } from './admin/create-game/create-game.component';
 import { UserManagementComponent } from './admin/user-management/user-management.component';
 import { UpdateGameComponent } from './components/update-game/update-game.component';
 import { FavoritesComponent } from './components/dashboard/favorites/favorites.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { FavoritesComponent } from './components/dashboard/favorites/favorites.c
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    CKEditorModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } // Ajoutez l'intercepteur JWT aux providers
