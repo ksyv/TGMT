@@ -46,7 +46,7 @@ const routes: Routes = [
   },
   { path: 'dashboard/favorites', component: FavoritesComponent},
   // Redirection par défaut
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/gamecard', pathMatch: 'full' },
 ];
 
 @NgModule({
