@@ -1,5 +1,6 @@
 const { json } = require('express');
 const Game = require('../models/gameModel');
+const path = require('path');
 const User = require('../models/userModel');
 const fs = require('fs');
 
@@ -115,84 +116,84 @@ module.exports = {
             });
     },
 
-    // Mettre à jour un jeu existant
-    updateGame: (req, res) => {
-        const gameId = req.params.id;
-        const gameData = req.body;
-    
-        if (req.file) {
-            // Mise à jour avec une nouvelle image
-            Game.findById(gameId)
-                .then(foundGame => {
-                    if (!foundGame) {
-                        return res.status(404).json({
-                            status: 404,
-                            message: 'Game not found',
-                        });
-                    }
-    
-                    // Supprimer l'ancienne image s'il y en a une
-                    if (foundGame.image) {
-                        const oldImagePath = foundGame.image.split('/images/')[1];
-                        fs.unlinkSync(`public/images/${oldImagePath}`);
+// Mettre à jour un jeu existant
+updateGame: (req, res) => {
+    const gameId = req.params.id;
+    let gameData = req.body;
+
+    if (req.file) {
+        Game.findById(gameId)
+            .then(foundGame => {
+                if (!foundGame) {
+                    return res.status(404).json({
+                        status: 404,
+                        message: 'Game not found',
+                    });
+                }
+
+                // Supprimer l'ancienne image s'il y en a une
+                if (foundGame.image) {
+                    const oldImagePath = path.join(__dirname, '..', 'public', 'images', path.basename(foundGame.image));
+                    if (fs.existsSync(oldImagePath)) {
+                        fs.unlinkSync(oldImagePath);
                         console.log(`Ancienne image supprimée : ${oldImagePath}`);
                     }
-    
-                    // Mettre à jour avec la nouvelle image
-                    gameData.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-    
-                    return Game.findByIdAndUpdate(gameId, gameData, { new: true });
-                })
-                .then(updatedGame => {
-                    if (!updatedGame) {
-                        return res.status(404).json({
-                            status: 404,
-                            message: 'Game not found',
-                        });
-                    }
-    
-                    res.status(200).json({
-                        status: 200,
-                        message: 'Game updated successfully',
-                        result: updatedGame,
+                }
+
+                // Mettre à jour avec la nouvelle image
+                gameData.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+
+                return Game.findByIdAndUpdate(gameId, gameData, { new: true });
+            })
+            .then(updatedGame => {
+                if (!updatedGame) {
+                    return res.status(404).json({
+                        status: 404,
+                        message: 'Game not found',
                     });
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la mise à jour du jeu :', error);
-                    res.status(500).json({
-                        status: 500,
-                        message: 'Error when updating game',
-                        error: error.message,
-                    });
+                }
+
+                res.status(200).json({
+                    status: 200,
+                    message: 'Game updated successfully',
+                    result: updatedGame,
                 });
-        } else {
-            // Mise à jour sans nouvelle image
-            Game.findByIdAndUpdate(gameId, gameData, { new: true })
-                .then(updatedGame => {
-                    if (!updatedGame) {
-                        return res.status(404).json({
-                            status: 404,
-                            message: 'Game not found',
-                        });
-                    }
-    
-                    res.status(200).json({
-                        status: 200,
-                        message: 'Game updated successfully',
-                        result: updatedGame,
-                    });
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la mise à jour du jeu :', error);
-                    res.status(500).json({
-                        status: 500,
-                        message: 'Error when updating game',
-                        error: error.message,
-                    });
+            })
+            .catch(error => {
+                console.error('Erreur lors de la mise à jour du jeu :', error);
+                res.status(500).json({
+                    status: 500,
+                    message: 'Error when updating game',
+                    error: error.message,
                 });
-        }
-    },
-    
+            });
+    } else {
+        // Mise à jour sans nouvelle image
+        Game.findByIdAndUpdate(gameId, gameData, { new: true })
+            .then(updatedGame => {
+                if (!updatedGame) {
+                    return res.status(404).json({
+                        status: 404,
+                        message: 'Game not found',
+                    });
+                }
+
+                res.status(200).json({
+                    status: 200,
+                    message: 'Game updated successfully',
+                    result: updatedGame,
+                });
+            })
+            .catch(error => {
+                console.error('Erreur lors de la mise à jour du jeu :', error);
+                res.status(500).json({
+                    status: 500,
+                    message: 'Error when updating game',
+                    error: error.message,
+                });
+            });
+    }
+},
     
 
     // Supprimer un jeu

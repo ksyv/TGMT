@@ -10,7 +10,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class ResetPasswordComponent implements OnInit {
   resetPasswordForm: FormGroup;
-  token: string = '';  // Initialisation de la propriété 'token'
+  token: string = '';
   errorMessage: string = '';
 
   constructor(
@@ -26,8 +26,9 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.token = params['token'] || '';  // Récupération du token de l'URL de manière asynchrone
+    // Récupération du token depuis les queryParams
+    this.route.queryParams.subscribe(params => {
+      this.token = params['token'] || '';
     });
   }
 
@@ -41,7 +42,6 @@ export class ResetPasswordComponent implements OnInit {
     if (this.resetPasswordForm.valid) {
       const newPassword = this.resetPasswordForm.get('password')?.value;
 
-      // Appel de la méthode resetPassword du service AuthService avec le token et le nouveau mot de passe
       this.authService.resetPassword(this.token, newPassword).subscribe(
         response => {
           console.log('Mot de passe réinitialisé avec succès:', response);

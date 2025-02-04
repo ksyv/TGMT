@@ -5,6 +5,7 @@ const authMiddleware = require('../middlewares/auth'); // Middleware d'authentif
 const User = require('../models/userModel');
 const sendResetMail = require('../middlewares/email.service');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 router.get('/', (req, res) => {
   User.find({})
