@@ -1,3 +1,4 @@
+/* Styles for the search filters container */
 .search-filters {
   background-color: #f8f9fa;
   border: 1px solid #ddd;
@@ -6,10 +7,12 @@
   margin-bottom: 20px;
 }
 
+/* Styles for the search filters title */
 .search-filters h4 {
   margin-bottom: 15px;
 }
 
+/* Styles for each game card */
 .game-card {
   background-color: #fff;
   border: 1px solid #ddd;
@@ -20,72 +23,86 @@
   height: 100% ;
 }
 
+/* Hover effect for game cards */
 .game-card:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Styles for the game image inside a card */
 .game-card .game-image {
   width: 100%;
   height: auto;
   border-radius: 5px;
 }
 
+/* Styles for the game title inside a card */
 .game-card .game-title {
   font-size: 1.2rem;
   font-weight: bold;
   margin-top: 0.5rem;
 }
 
+/* Styles for the game details section inside a card */
 .game-card .game-details {
   margin-top: 1rem;
 }
 
+/* Styles for the columns inside game details */
 .game-card .column {
   margin-bottom: 0.5rem;
 }
 
+/* Styles for the orange text inside game details */
 .game-card .orange-text {
   font-weight: bold;
   color: orange;
 }
 
+/* Global styles for the body */
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+/* Global styles for links */
 a {
   color: #ff6100;
 }
 
+/* Styles for error lists */
 .errors {
   list-style-type: none;
   padding: 0;
 }
 
+/* Styles for error list items */
 .errors li {
   color: red;
 }
 
+/* Styles for alerts */
 .alert {
   margin-top: 1rem;
 }
 
+/* Styles for the custom gradient button */
 .btn-custom-gradient {
   background: linear-gradient(140deg, #ff6100 40%, #a916bb 90%);
-  color: #fff; /* Couleur du texte, à adapter selon le contraste souhaité */
-  border: none; /* Retirer la bordure si nécessaire */
-  /* Autres styles de bordure, ombre, etc. */
+  color: #fff; /* Text color, adjust as needed for contrast */
+  border: none; /* Remove border if not needed */
+  /* Other styles for border, shadow, etc. */
 }
 
+/* Styles to center tabs */
 .center-tabs {
   display: flex;
-  justify-content: center; /* Centre les éléments horizontalement */
-  align-items: center; /* Centre les éléments verticalement (si besoin) */
-  height: 100%; /* Ajuste la hauteur si nécessaire */
+  justify-content: center; /* Centers items horizontally */
+  align-items: center; /* Centers items vertically (if needed) */
+  height: 100%; /* Adjust height as needed */
 }
+
+/* Styles for the h4 title */
 h4 {
   margin-bottom: 15px;
   color: #ff6100;
 }
-/* Si besoin d'autres styles personnalisés */

@@ -9,7 +9,6 @@ import { SigninComponent } from './components/auth/signin/signin.component';
 import { SignupComponent } from './components/auth/signup/signup.component';
 import { GamecardComponent } from './components/gamecard/gamecard.component';
 import { SingleGameComponent } from './components/gamecard/single-game/single-game.component';
-import { EditGameComponent } from './components/gamecard/edit-game/edit-game.component';
 import { HeaderComponent } from './components/partials/header/header.component';
 import { FooterComponent } from './components/partials/footer/footer.component';
 import { NotFoundComponent } from './components/partials/not-found/not-found.component';
@@ -32,7 +31,6 @@ import { QuillModule } from 'ngx-quill';
     SignupComponent,
     GamecardComponent,
     SingleGameComponent,
-    EditGameComponent,
     HeaderComponent,
     FooterComponent,
     NotFoundComponent,
