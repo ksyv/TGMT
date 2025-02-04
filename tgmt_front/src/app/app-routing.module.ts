@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { SignupComponent } from './components/auth/signup/signup.component';
 import { SigninComponent } from './components/auth/signin/signin.component';
 import { GamecardComponent } from './components/gamecard/gamecard.component';
-import { AddGameComponent } from './components/gamecard/add-game/add-game.component';
 import { EditGameComponent } from './components/gamecard/edit-game/edit-game.component';
 import { SingleGameComponent } from './components/gamecard/single-game/single-game.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -21,14 +20,13 @@ const routes: Routes = [
   { path: 'sign-up', component: SignupComponent },
   { path: 'sign-in', component: SigninComponent },
   { path: 'gamecard', component: GamecardComponent },
-  { path: 'add-game', component: AddGameComponent },
   { path: 'edit-game', component: EditGameComponent },
   { path: 'single-game/:id', component: SingleGameComponent },
   { path: 'games/:id/update', component: UpdateGameComponent, canActivate: [AuthGuard, AdminGuard], data: { expectedRole: 'admin' }},
   { path: 'dashboard', component: DashboardComponent },
   { path: 'mes-informations', component: UserInfoComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'reset-password/:token', component: ResetPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
   {
     path: 'admin/dashboard',
     component: DashboardComponent,

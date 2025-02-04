@@ -2,13 +2,10 @@ const nodemailer = require('nodemailer');
 
 const sendResetMail = (req, res, next) => {
     const transporter = nodemailer.createTransport({
-        service: 'hotmail',
-        host: 'smtp.office365.com',
-        port: 587,
-        secure: false,
+        service: 'gmail',
         auth: {
-            user: process.env.HOTMAIL_USER,
-            pass: process.env.HOTMAIL_PASS
+                user: process.env.GMAIL_USER,  // Utilise la variable d'environnement pour l'adresse Gmail
+                pass: process.env.GMAIL_APP_PASSWORD 
         }
     });
 
@@ -20,7 +17,7 @@ const sendResetMail = (req, res, next) => {
     `;
 
     const mailOptions = {
-        from: process.env.HOTMAIL_USER,
+        from: process.env.GMAIL_USER,
         to: req.body.email,
         subject: "Réinitialisez votre mot de passe",
         html: message
