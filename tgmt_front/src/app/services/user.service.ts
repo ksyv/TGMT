@@ -24,4 +24,8 @@ export class UserService {
   searchUsers(searchTerm: string): Observable<User[]> {
     return this.http.get<User[]>(`${this.apiUrl}/search?term=${searchTerm}`);
   }
+  
+  deleteUser(userId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/delete/${userId}`);
+  }
 }

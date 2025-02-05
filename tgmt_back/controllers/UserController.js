@@ -301,5 +301,37 @@ module.exports = {
             console.error('Error updating user role:', error);
             res.status(500).json({ message: 'Internal server error', error });
         }
-    }
+    },
+
+    // Supprimer un utilisateur par son ID
+    deleteUser: async (req, res) => {
+        const userId = req.params.userId;
+
+        try {
+            const user = await User.findById(userId);
+
+            if (!user) {
+                return res.status(404).json({
+                    status: 404,
+                    message: 'User not found',
+                });
+            }
+
+            // Supprimer l'utilisateur
+            await User.findByIdAndDelete(userId);
+
+            res.status(200).json({
+                status: 200,
+                message: 'User deleted successfully',
+            });
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            res.status(500).json({
+                status: 500,
+                message: 'Error deleting user',
+                error: error.message,
+            });
+        }
+    },
+
 };
