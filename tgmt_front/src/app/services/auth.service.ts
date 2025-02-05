@@ -8,10 +8,11 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  public roleSubject = new BehaviorSubject<string>(''); // Changement à public
+  private apiUrl = 'http://localhost:3000/users'; // Déclaration de la propriété apiUrl
+  public roleSubject = new BehaviorSubject<string | null>(null); // Correction du type pour accepter null
   role$ = this.roleSubject.asObservable();
 
-  public userIdSubject = new BehaviorSubject<string>(''); // Changement à public
+  public userIdSubject = new BehaviorSubject<string | null>(null); // Correction du type pour accepter null
   userId$ = this.userIdSubject.asObservable();
 
   errorMessage: string = '';
@@ -57,7 +58,7 @@ export class AuthService {
   login(email: string, password: string): Observable<any> {
     this.errorMessage = '';
 
-    return this.http.post<any>('http://localhost:3000/users/login', { email, password })
+    return this.http.post<any>(`${this.apiUrl}/login`, { email, password })
       .pipe(
         tap(response => {
           if (response && response.token && response.role) {
@@ -89,21 +90,21 @@ export class AuthService {
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem(this.tokenKey); // Supprimer le token du localStorage
     }
-    this.roleSubject.next(''); // Réinitialiser le BehaviorSubject du rôle
-    this.userIdSubject.next(''); // Réinitialiser le BehaviorSubject de l'ID utilisateur
+    this.roleSubject.next(null); // Réinitialiser le BehaviorSubject du rôle
+    this.userIdSubject.next(null); // Réinitialiser le BehaviorSubject de l'ID utilisateur
     this.router.navigateByUrl('/sign-in'); // Rediriger vers la page de connexion
   }
 
-  getRole(): Observable<string> {
-    return this.role$; 
+  getRole(): Observable<string | null> { // Retourne maintenant Observable<string | null>
+    return this.role$;
   }
 
-  getUserId() {
+  getUserId(): Observable<string | null> { // Retourne maintenant Observable<string | null>
     return this.userId$;
   }
 
   updateUserInfo(user: any): Observable<any> {
-    return this.http.put<any>('http://localhost:3000/users/current', user, this.getHttpOptions())
+    return this.http.put<any>(`${this.apiUrl}/current`, user, this.getHttpOptions())
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.errorMessage = 'Erreur lors de la mise à jour des informations. Veuillez réessayer plus tard.';
@@ -113,7 +114,7 @@ export class AuthService {
   }
 
   getUserInfo(): Observable<any> {
-    return this.http.get<any>('http://localhost:3000/users/current', this.getHttpOptions())
+    return this.http.get<any>(`${this.apiUrl}/current`, this.getHttpOptions())
       .pipe(
         tap(response => {
           if (response && response.role) {
@@ -128,7 +129,7 @@ export class AuthService {
   }
 
   forgotPassword(email: string): Observable<any> {
-    const url = 'http://localhost:3000/users/forgot-password';
+    const url = `${this.apiUrl}/forgot-password`;
     return this.http.post<any>(url, { email })
       .pipe(
         catchError((error: HttpErrorResponse) => {
@@ -142,8 +143,30 @@ export class AuthService {
   }
 
   resetPassword(token: string, newPassword: string): Observable<any> {
-    const url = `http://localhost:3000/users/reset-password/${token}`;
+    const url = `${this.apiUrl}/reset-password/${token}`;
     return this.http.post(url, { newPassword });
+  }
+
+  deleteAccount(): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/delete`, this.getHttpOptions()).pipe(
+      catchError((error: HttpErrorResponse) => {
+        this.errorMessage = 'Erreur lors de la suppression du compte. Veuillez réessayer plus tard.';
+        return throwError(error);
+      }),
+      tap(() => {
+        // Supprimer les informations de l'utilisateur du localStorage SEULEMENT APRES la suppression
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('role');
+
+        // Réinitialiser l'état de l'utilisateur dans le service
+        this.userIdSubject.next(null);
+        this.roleSubject.next(null);
+
+        // Rediriger vers la page de connexion
+        this.router.navigate(['/sign-in']);
+      })
+    );
   }
 
   private getHttpOptions() {

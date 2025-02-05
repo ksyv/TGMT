@@ -59,4 +59,19 @@ export class UserInfoComponent implements OnInit {
       }
     );
   }
+
+  deleteAccount(): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer votre compte et toutes les données associées ?')) {
+      this.authService.deleteAccount().subscribe(
+        () => {
+          console.log('Compte supprimé avec succès');
+          this.authService.logout(); // Déconnecte l'utilisateur et le redirige
+        },
+        (error) => {
+          console.error('Erreur lors de la suppression du compte', error);
+          this.errorMessage = 'Erreur lors de la suppression du compte.';
+        }
+      );
+    }
+  }
 }
