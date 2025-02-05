@@ -1,12 +1,147 @@
-/* You can add global styles to this file, and also import other style files */
+/* styles.css */
 @charset "utf-8";
 
-/* Règles CSS générales */
+/* CSS Variables */
+:root {
+  /* Colors */
+  --primary-color: #ff6100; /* Orange */
+  --secondary-color: #a916bb; /* Purple */
+  --background-color: #d1d1d1; /* Light Gray */
+  --text-color: #212529; /* Default text color (almost black) */
+  --link-color: #ff6100; /* Orange, as originally defined for links */
+  --error-color: red;
+  --success-color: #28a745; /* Not used in this file, but defined for consistency */
+  --white-color: #fff;
+  --gray-color: #666;
+  --light-gray-color: #f5f5f5; /* Not used in this file, but defined for consistency */
+  --border-color: #ddd; /* Not used in this file, but defined for consistency */
 
-.material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+  /* Fonts */
+  --font-family-sans-serif: "Lucida Grande", Helvetica, Arial, sans-serif;
+  --font-family-title: "Satisfy", cursive;
+  --font-family-text: "AlegreyaSansSC-Medium", sans-serif; /* Main font for body text */
+
+  /* Spacings */
+  --spacing-xs: 5px;
+  --spacing-sm: 10px;
+  --spacing-md: 15px;
+  --spacing-lg: 20px;
+  --spacing-xl: 50px;
+
+  /* Shadows */
+  --box-shadow-subtle: 0px 6px 12px -2px rgba(50, 50, 93, 0.25), 0px 3px 7px -3px rgba(0, 0, 0, 0.3);
+  --box-shadow-strong: 0 0 10px rgba(0, 0, 0, 0.1);
+  --box-shadow-focus: rgba(33, 35, 38, 0.8) 0px 10px 10px -10px;
 }
 
+/* General Styles */
+html {
+  scroll-behavior: smooth; /* Smooth scrolling for anchor links */
+}
+
+body {
+  margin: 0; /* Remove default margin */
+  background-color: var(--background-color);
+  font: 14px var(--font-family-text);
+  color: var(--text-color);
+  padding: var(--spacing-xl); /* Global padding for the body */
+}
+
+* {
+  margin: 0; /* Reset default margin for all elements */
+}
+
+/* Links */
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a:active {
+  color: var(--secondary-color);
+}
+
+a:focus {
+  color: var(--link-color);
+  text-decoration: none;
+  box-shadow: var(--box-shadow-focus);
+  outline: none;
+}
+
+/* Headings */
+h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-title);
+  font-size: 1.6em;
+}
+
+h6 {
+  visibility: hidden; /* Hide h6 elements */
+}
+
+/* Paragraphs */
+p {
+  text-align: justify;
+  padding-top: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+  margin: auto;
+}
+
+/* Sections */
+.section {
+  height: 100vh;
+  box-shadow: var(--box-shadow-subtle);
+  position: relative;
+}
+
+/* Items (specific use case, consider removing or generalizing) */
+.item {
+  width: auto;
+  height: 500px;
+}
+
+/* Strong (bold) text */
+strong {
+  font-weight: normal; /* Overriding default bold style to normal weight */
+}
+
+/* Errors */
+.errors {
+  list-style-type: none;
+  padding: 0;
+}
+
+.errors li {
+  color: var(--error-color);
+}
+
+/* Alert Messages */
+.alert {
+  margin-top: var(--spacing-md);
+}
+
+/* Custom Gradient Button */
+.btn-custom-gradient {
+  background: linear-gradient(140deg, var(--primary-color) 40%, var(--secondary-color) 90%);
+  color: var(--white-color);
+  border: none;
+}
+
+/* Center Tabs (consider if this is specific to a component) */
+.center-tabs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* Media Queries for Mobile Responsiveness */
+@media screen and (max-width: 1024px) {
+  .section {
+    height: 100%; /* Adjust section height for smaller screens */
+  }
+}
+
+/* Font Face Definitions */
 @font-face {
   font-family: "Satisfy";
   src: url("assets/fonts/Satisfy/Satisfy-Regular.ttf");
@@ -31,70 +166,7 @@
   font-family: "AlegreyaSansSC-Medium";
   src: url("assets/fonts/Alegreya_Sans_SC/AlegreyaSansSC-Medium.ttf");
 }
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  background-color: #d1d1d1;
-  font-family: 'AlegreyaSansSC-Medium';
-}
-
-* {
-  margin: 0;
-}
-
-.section {
-  height: 100vh;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-  position: relative;
-}
-
-p {
-  text-align: justify;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  margin: auto;
-}
-
-a {
-  text-decoration: none;
-}
-
-a:active {
-  color: #a916bb;
-}
-
-a:focus {
-  color: #ff6100;
-  text-decoration: none;
-  box-shadow: rgba(33, 35, 38, 0.8) 0px 10px 10px -10px;
-  outline: none;
-}
-
-h2, h3, h4, h5, h6 {
-  font-family: 'Satisfy';
-  font-size: 1.6em;
-}
-
-h6 {
-  visibility: hidden;
-}
-
-.item {
-  width: auto;
-  height: 500px;
-}
-
-strong {
-  font-weight: normal;
-}
-
-/* Media queries pour l'affichage mobile */
-@media screen and (max-width: 1024px) {
-  .section {
-    height: 100%;
-  }
+/* Material Symbols Outlined (consider including this in a separate file or using a CDN) */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 24;
 }

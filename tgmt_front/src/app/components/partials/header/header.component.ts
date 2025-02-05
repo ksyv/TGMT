@@ -13,7 +13,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.getRole().subscribe(role => {
-      this.isLoggedIn = role !== ''; // Vérifie si un rôle est défini (connecté)
+      this.isLoggedIn = role !== null && role !== '';
     });
   }
 
