@@ -1,5 +1,5 @@
 header {
-	height: vh;
+	height: auto;
 }
 
 nav {
@@ -29,6 +29,84 @@ ul {
     background: -webkit-linear-gradient(140deg, #3b3b3b 70%, #9c9997 100%);
     background: linear-gradient(140deg, #3b3b3b 70%, #9c9997 100%);
 	box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+/* Styles pour le bouton hamburger */
+.hamburger-menu {
+  display: none; /* Cacher le bouton par défaut sur les grands écrans */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-sm); /* Ajout d'un padding pour le bouton */
+}
+
+.material-symbols-outlined{
+  color: var(--text-color);
+  font-size: 2rem;
+}
+
+/* Styles pour le menu responsive */
+@media (max-width: 664px) { /* Ajuste le breakpoint si nécessaire */
+  .nav-content .nav {
+    display: none; /* Cacher le menu par défaut sur les petits écrans */
+     /* Cacher par défaut sur les petits écrans */
+    border-radius: var(--spacing-sm);
+    position: absolute;        /* Positionnement absolu */
+    top: 100%;               /* Positionner sous le header (100% de la hauteur du header) */
+    right: 0;                /* Aligner à droite */
+    background-color: var(--light-gray-color);
+    z-index: 10;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-color); /* Ajout d'une bordure */
+    min-width: 150px;        /* Largeur minimale */
+
+  }
+
+  .nav-content {
+    position: relative; /* Ajout de position: relative; */
+  }
+
+  .nav-content .nav.show {
+    display: block; /* Afficher le menu lorsqu'il a la classe 'show' */
+    position: absolute;
+    top: 100%; /* Positionne le menu juste en dessous du header */
+    right: 0; /* Conserve l'alignement à droite */
+    width: auto; /* La largeur s'adapte au contenu */
+    min-width: 150px; /* Largeur minimale pour éviter un menu trop étroit */
+    background-color: var(--light-gray-color); /* Ou la couleur de fond souhaitée */
+    z-index: 10; /* S'assurer qu'il est au-dessus du reste du contenu */
+    padding: var(--spacing-sm); /* Ajout d'un padding pour le menu */
+    border: 1px solid var(--border-color); /* Ajout d'une bordure */
+    border-radius: var(--spacing-sm); /* Coins arrondis */
+  }
+
+  .nav-content .nav ul {
+    display: flex;
+    flex-direction: column; /* Affiche les liens verticalement */
+    align-items: flex-start; /* Aligne les liens à gauche */
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-content .nav ul li {
+    width: 100%; /* Les éléments de la liste prennent toute la largeur */
+    margin-bottom: var(--spacing-sm); /* Marge entre les liens */
+  }
+
+  .nav-content .nav ul li a {
+      display: block; /* Transforme les liens en blocs pour faciliter le clic */
+      padding: var(--spacing-xs) var(--spacing-sm); /* Padding autour des liens */
+  }
+
+  .hamburger-menu {
+    display: block; /* Afficher le bouton hamburger sur les petits écrans */
+  }
+
+  .social-icons {
+    display: none;
+  }
+  .material-symbols-outlined.rotated {
+    transform: rotate(90deg); /* Rotation de 90 degrés */
+  }
 }
 
 header li, footer li {
@@ -169,7 +247,7 @@ nav a:hover {
 
 /* media queries pour l'affichage mobile */
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1344px) {
 
 	/* adaptations pour le header et la navigation */
 

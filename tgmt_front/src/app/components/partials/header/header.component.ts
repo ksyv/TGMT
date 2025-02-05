@@ -8,6 +8,7 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class HeaderComponent implements OnInit {
   isLoggedIn: boolean = false;
+  isMenuOpen: boolean = false;
 
   constructor(private authService: AuthService) { }
 
@@ -20,4 +21,8 @@ export class HeaderComponent implements OnInit {
   onLogout() {
     this.authService.logout();
   }
+  
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+}
 }
