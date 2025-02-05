@@ -33,7 +33,7 @@ router.post('/check', UserController.check);
 router.get('/userinfo/:userId', UserController.getUserInfo);
 
 // Route pour supprimer un utilisateur (accessible uniquement aux administrateurs)
-router.delete('/delete/:userId', UserController.deleteUser);
+router.delete('/delete/:userId?', authMiddleware, UserController.deleteUser);
 
 // Middleware d'authentification pour les routes suivantes
 router.use(authMiddleware);

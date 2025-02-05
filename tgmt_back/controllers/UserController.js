@@ -305,33 +305,57 @@ module.exports = {
 
     // Supprimer un utilisateur par son ID
     deleteUser: async (req, res) => {
-        const userId = req.params.userId;
-
         try {
-            const user = await User.findById(userId);
-
-            if (!user) {
-                return res.status(404).json({
-                    status: 404,
-                    message: 'User not found',
+            let userId = req.params.userId; // Récupère l'ID depuis les paramètres de l'URL
+            let isAdmin = false;
+    
+            // Vérifie si un rôle est présent dans le token
+            if (req.user && req.user.role) {
+                isAdmin = req.user.role === 'admin';
+            }
+    
+            // Si l'ID utilisateur n'est pas fourni dans l'URL, utiliser l'ID du token
+            if (!userId && req.userId) {
+                userId = req.userId;
+            }
+            
+            // Vérification des autorisations
+            if (!isAdmin && userId !== req.userId) {
+                return res.status(403).json({
+                status: 403,
+                message: "Vous n'êtes pas autorisé à effectuer cette action.",
                 });
             }
-
+    
+            // Vérifier si l'utilisateur existe
+            const user = await User.findById(userId);
+            if (!user) {
+                return res.status(404).json({
+                status: 404,
+                message: 'Utilisateur non trouvé',
+                });
+            }
+    
+            // Supprimer les données associées à l'utilisateur (à adapter en fonction de ta structure de données)
+            // Par exemple, si tu as une collection 'GameTable' :
+            await GameTable.deleteMany({ creator: userId });
+    
             // Supprimer l'utilisateur
             await User.findByIdAndDelete(userId);
-
+    
             res.status(200).json({
                 status: 200,
-                message: 'User deleted successfully',
+                message: 'Compte utilisateur et données associées supprimés avec succès',
             });
         } catch (error) {
-            console.error('Error deleting user:', error);
+            console.error('Erreur lors de la suppression du compte utilisateur:', error);
             res.status(500).json({
                 status: 500,
-                message: 'Error deleting user',
+                message: 'Erreur lors de la suppression du compte utilisateur',
                 error: error.message,
             });
         }
     },
+    
 
 };
