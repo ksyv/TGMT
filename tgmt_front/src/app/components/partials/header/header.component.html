@@ -8,7 +8,10 @@
 
 		<nav>
       <div class="nav-content">
-        <div class="nav">
+        <button class="hamburger-menu" (click)="toggleMenu()">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <div class="nav" [class.show]="isMenuOpen" (click)="isMenuOpen = false">
           <ul>
             <li><a href="https://www.opbc.fr/index.php#logo">ACCUEIL</a></li>
             <li><a href="https://www.opbc.fr/index.php#opbc">OPBC</a></li>

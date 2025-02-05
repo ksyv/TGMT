@@ -51,6 +51,22 @@ body {
   margin: 0; /* Reset default margin for all elements */
 }
 
+/* Navigation Tabs */
+.nav-tabs .nav-link {
+  color: var(--link-color); /* Utilise la variable CSS pour la couleur des liens (orange) */
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--primary-color); /* Ou une couleur légèrement différente pour le survol */
+  filter: brightness(90%);
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--text-color); /* Couleur du texte de l'onglet actif (à définir selon tes préférences) */
+  background-color: var(--light-gray-color); /* Couleur de fond de l'onglet actif (à définir) */
+  border-color: var(--border-color); /* Couleur de bordure de l'onglet actif (à définir) */
+}
+
 /* Links */
 a {
   color: var(--link-color);
