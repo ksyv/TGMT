@@ -32,6 +32,9 @@ router.post('/check', UserController.check);
 // GET - Récupération des informations d'un utilisateur par son ID
 router.get('/userinfo/:userId', UserController.getUserInfo);
 
+// Route pour supprimer un utilisateur (accessible uniquement aux administrateurs)
+router.delete('/delete/:userId', UserController.deleteUser);
+
 // Middleware d'authentification pour les routes suivantes
 router.use(authMiddleware);
 

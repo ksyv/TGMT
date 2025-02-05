@@ -1,7 +1,6 @@
 <div class="container">
   <h1 class="text-center mb-4">Gestion des Utilisateurs</h1>
 
-  <!-- Formulaire de recherche -->
   <form (ngSubmit)="searchUser(searchTerm.value)">
     <div class="form-group">
       <label for="searchTerm">Rechercher par nom d'utilisateur, nom ou prénom :</label>
@@ -19,6 +18,7 @@
         <th>Email</th>
         <th>Téléphone</th>
         <th>Admin</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -31,8 +31,10 @@
         <td>
           <input type="checkbox" [checked]="user.role === 'admin'" (change)="onRoleChange(user)">
         </td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteUser(user._id)">Supprimer</button>
+        </td>
       </tr>
     </tbody>
   </table>
 </div>
-
