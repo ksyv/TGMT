@@ -38,28 +38,34 @@
         </div>
 
         <div class="container card">
-        <div *ngIf="tables && tables.length > 0">
-          <h2>Tables disponibles pour ce jeu :</h2>
-          <div class="row">
-            <div *ngFor="let table of tables" class="col-md-4 mb-3">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">{{ table.startTime | date:'dd/MM HH:mm' }}</h5>
-                  <p class="card-title">Créée par: <strong>{{ table.creator ? table.creator.username : 'Inconnu' }}</strong></p>
-                  <p class="card-text">
-                    <strong>Jeu:</strong> {{ table.game ? table.game.name : 'Inconnu' }}<br>
-                    <span *ngIf="table.endTime"><strong>Fin:</strong> {{ table.endTime | date:'dd/MM HH:mm' }}</span><br>
-                    <strong>Statut:</strong> <span [ngClass]="{'text-success': table.open, 'text-danger': !table.open}">{{ table.open ? 'Ouverte' : 'Fermée' }}</span><br>
-                    <strong>Participants:</strong> {{ table.participants.length }}<br>
-
-                  </p>
-                  <button class="btn btn-primary btn-custom-gradient">S'inscrire</button>
-                  <button class="btn btn-danger" *ngIf="isAdmin || userId === table.creator._id.toString()" (click)="deleteTable(table._id)">Supprimer</button> </div>
+          <div *ngIf="tables && tables.length > 0">
+            <h2>Tables disponibles pour ce jeu :</h2>
+            <div class="row">
+              <div *ngFor="let table of tables" class="col-md-4 mb-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ table.startTime | date:'dd/MM HH:mm' }}</h5>
+                    <p class="card-title">Créée par: <strong>{{ table.creator ? table.creator.username : 'Inconnu' }}</strong></p>
+                    <p class="card-text">
+                      <strong>Jeu:</strong> {{ table.game ? table.game.name : 'Inconnu' }}<br>
+                      <span *ngIf="table.endTime"><strong>Fin:</strong> {{ table.endTime | date:'dd/MM HH:mm' }}</span><br>
+                      <strong>Statut:</strong> <span [ngClass]="{'text-success': table.open, 'text-danger': !table.open}">{{ table.open ? 'Ouverte' : 'Fermée' }}</span><br>
+                      <strong>Participants:</strong> {{ table.participants.length }}<br>
+                    </p>
+                    <button *ngIf="isLoggedIn && isUserRegisteredToTable(table)" (click)="leaveTable(table._id)" class="btn btn-custom-gradient"> Se désinscrire
+                    </button>
+                    <button *ngIf="isLoggedIn && !isUserRegisteredToTable(table)" (click)="joinTable(table._id)" class="btn btn-custom-gradient"> S'inscrire
+                    </button>
+                    <button class="btn btn-danger" *ngIf="isAdmin || userId === table.creator._id.toString()" (click)="deleteTable(table._id)">Supprimer</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+            <div *ngIf="!tables || tables.length === 0">
+                <p>Aucune table disponible pour ce jeu pour le moment.</p>
+            </div>
         </div>
-      </div>
 
          <button class="btn btn-primary btn-custom-gradient w-100 mt-3" *ngIf="isLoggedIn" (click)="openCreateTableForm()">Créer une table pour ce jeu</button>
 

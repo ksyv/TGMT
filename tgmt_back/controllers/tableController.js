@@ -213,6 +213,65 @@ const list = async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la récupération des tables de jeu' });
   }
 };
+const joinTable = async (req, res) => {
+  const tableId = req.params.id;
+  const userId = req.user.userId; // Récupère l'ID de l'utilisateur depuis le token
+
+  try {
+      const table = await GameTable.findById(tableId);
+      if (!table) {
+          return res.status(404).json({ error: 'Table de jeu non trouvée.' });
+      }
+
+      // Vérifie si la table est ouverte
+      if (!table.open) {
+          return res.status(400).json({ error: 'Les inscriptions à cette table sont fermées.' });
+      }
+
+      // Vérifier si l'utilisateur est déjà inscrit
+      if (table.participants.includes(userId)) {
+          return res.status(400).json({ error: 'Vous êtes déjà inscrit à cette table.' });
+      }
+
+      // Ajouter l'utilisateur à la liste des participants
+      table.participants.push(userId);
+      await table.save();
+
+      res.status(200).json({ message: 'Inscription réussie.' });
+
+  } catch (err) {
+      console.error("Erreur lors de l'inscription à la table de jeu :", err);
+      res.status(500).json({ error: "Erreur lors de l'inscription à la table de jeu." });
+  }
+};
+
+const leaveTable = async (req, res) => {
+  const tableId = req.params.id;
+  const userId = req.user.userId; //On recupere l'id
+
+  try {
+      const table = await GameTable.findById(tableId);
+      if (!table) {
+          return res.status(404).json({ error: 'Table de jeu non trouvée.' });
+      }
+
+      // Vérifier si l'utilisateur est inscrit
+      const participantIndex = table.participants.indexOf(userId);
+      if (participantIndex === -1) {
+          return res.status(400).json({ error: "Vous n'êtes pas inscrit à cette table." });
+      }
+
+      // Retirer l'utilisateur de la liste des participants
+      table.participants.splice(participantIndex, 1); //On retire l'id de l'utilisateur du tableau
+      await table.save();
+
+      res.status(200).json({ message: 'Désinscription réussie.' });
+
+  } catch (err) {
+      console.error("Erreur lors de la désinscription de la table de jeu :", err);
+      res.status(500).json({ error: "Erreur lors de la désinscription de la table de jeu." });
+  }
+};
 
 module.exports = {
     create,
@@ -220,4 +279,6 @@ module.exports = {
     update,
     remove,
     list,
+    joinTable,
+    leaveTable,
 };

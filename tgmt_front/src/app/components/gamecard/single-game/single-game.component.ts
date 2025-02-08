@@ -18,6 +18,7 @@ export class SingleGameComponent implements OnInit {
   isInFavorites: boolean = false;
   isLoggedIn: boolean = false;
   tables: any[] = [];
+  isUserRegistered: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -83,6 +84,46 @@ export class SingleGameComponent implements OnInit {
       }
     });
   }
+
+  // Nouvelle méthode pour vérifier si l'utilisateur est inscrit à une table donnée
+  isUserRegisteredToTable(table: any): boolean {
+    return table.participants.some((participant: any) => participant._id === this.userId);
+}
+
+// Nouvelle méthode pour s'inscrire à une table
+joinTable(tableId: string): void {
+  if (!this.userId) {
+      console.error("User ID is not available. Cannot join table.");
+      return; // Ou afficher un message/redirection pour se connecter
+    }
+    this.gameTableService.joinTable(tableId).subscribe({
+        next: () => {
+            console.log('Successfully joined table');
+            this.loadTables(this.game!._id); // Recharge les tables pour mettre à jour l'affichage
+        },
+        error: (error) => {
+            console.error('Error joining table:', error);
+        }
+    });
+}
+
+// Nouvelle méthode pour se désinscrire d'une table
+leaveTable(tableId: string): void {
+  if (!this.userId) {
+      console.error("User ID is not available. Cannot leave table.");
+      return; // Ou afficher un message/redirection pour se connecter
+    }
+    this.gameTableService.leaveTable(tableId).subscribe({
+        next: () => {
+            console.log('Successfully left table');
+            this.loadTables(this.game!._id); // Recharge les tables pour mettre à jour l'affichage
+        },
+        error: (error) => {
+            console.error('Error leaving table:', error);
+        }
+    });
+}
+
 
   checkFavoriteStatus(): void {
     if (this.game && this.userId) {

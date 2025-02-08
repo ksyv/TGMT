@@ -18,6 +18,16 @@ export class GameTableService {
     return this.http.delete(`${this.baseUrl}/${tableId}`, this.getHttpOptions());
   }
 
+   // Nouvelle méthode pour rejoindre une table
+   joinTable(tableId: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${tableId}/join`, {}, this.getHttpOptions());
+  }
+
+  // Nouvelle méthode pour quitter une table
+  leaveTable(tableId: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${tableId}/leave`, {}, this.getHttpOptions());
+  }
+
     private getHttpOptions() {
         const token = (typeof localStorage !== 'undefined') ? localStorage.getItem('access_token') : '';
         const headers = new HttpHeaders({
