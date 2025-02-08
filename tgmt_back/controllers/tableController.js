@@ -177,6 +177,8 @@ const list = async (req, res) => {
       filter.game = gameId;
         console.log("Filtering by gameId:", gameId); // AJOUTE CE LOG
     }
+     // Ajout du filtre pour la date : startTime doit être dans le futur
+     filter.startTime = { $gte: new Date() };
 
     if (startTime && endTime) {
       filter.$or = [
