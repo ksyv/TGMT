@@ -28,4 +28,4 @@ var gameSchema = new schema({
 
 })
 
-module.exports = mongoose.model('Product', gameSchema)
+module.exports = mongoose.model('Game', gameSchema)
