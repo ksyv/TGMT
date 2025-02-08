@@ -18,4 +18,7 @@ router.put('/:id', auth, TableController.update);
 // Exemple : route pour supprimer une table de jeu par son ID
 router.delete('/:id', auth, TableController.remove);
 
+// Route pour récupérer les tables d'un jeu spécifique (publique)
+router.get('/', TableController.list); // Pas de middleware d'authentification ici !
+
 module.exports = router;

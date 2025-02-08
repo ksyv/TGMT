@@ -2,14 +2,11 @@
   <div class="container">
     <div class="row">
       <div class="col-md-4">
-        <!-- Image du jeu -->
         <img class="game-image" [src]="game.image" alt="Game Image">
       </div>
       <div class="col-md-8">
-        <!-- Nom du jeu -->
         <h1>{{ game.name }}</h1>
 
-        <!-- Détails du jeu -->
         <div class="game-details">
           <div class="game-detail">
             <span class="orange-text">Type:</span> {{ game.type }}
@@ -31,24 +28,33 @@
           </div>
         </div>
 
-        <!-- Description du jeu -->
         <div class="game-description">
           <p>Description :</p>
           <p [innerHTML]="getSafeDescription()"></p>
         </div>
 
-        <!-- Lien vers les règles -->
         <div class="game-rules">
           <a [href]="game.rules" target="_blank">Lien vers les règles</a>
         </div>
+        <div *ngIf="tables && tables.length > 0">
+          <h3>Tables disponibles pour ce jeu :</h3>
+          <ul>
+              <li *ngFor="let table of tables">
+                  Table ID: {{ table._id }}, Créateur: {{ table.creator }}, Heure de début: {{ table.startTime | date:'short' }}
+                  </li>
+          </ul>
+      </div>
+      <div *ngIf="!tables || tables.length === 0">
+          <p>Aucune table disponible pour ce jeu pour le moment.</p>
+      </div>
 
-        <!-- Boutons pour ajouter et retirer des favoris -->
+         <button class="btn btn-primary btn-custom-gradient w-100 mt-3" *ngIf="isLoggedIn" (click)="openCreateTableForm()">Créer une table pour ce jeu</button>
+
         <div>
           <button class="btn btn-primary btn-custom-gradient w-100 mt-3" *ngIf="!isInFavorites" (click)="addToFavorites()">Ajouter aux favoris</button>
           <button class="btn btn-primary btn-custom-gradient w-100 mt-3" *ngIf="isInFavorites" (click)="removeFromFavorites()">Retirer des favoris</button>
         </div>
 
-        <!-- Boutons pour les administrateurs -->
         <div *ngIf="isAdmin">
           <button class="btn btn-primary btn-custom-gradient w-100 mt-3" (click)="goToUpdatePage()">Mise à jour</button>
           <button class="btn btn-danger btn-custom-gradient w-100 mt-3" (click)="deleteGame()">Supprimer</button>

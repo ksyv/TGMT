@@ -23,6 +23,7 @@ import { UserManagementComponent } from './admin/user-management/user-management
 import { UpdateGameComponent } from './components/update-game/update-game.component';
 import { FavoritesComponent } from './components/dashboard/favorites/favorites.component';
 import { QuillModule } from 'ngx-quill';
+import { CreateTableComponent } from './components/create-table/create-table.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { QuillModule } from 'ngx-quill';
     CreateGameComponent,
     UserManagementComponent,
     UpdateGameComponent,
-    FavoritesComponent
+    FavoritesComponent,
+    CreateTableComponent
   ],
   imports: [
     BrowserModule,

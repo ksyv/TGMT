@@ -1,0 +1,48 @@
+<div class="container">
+  <h2>Créer une nouvelle table de jeu</h2>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="createTableForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="game">Jeu :</label>
+      <select id="game" formControlName="game" class="form-control" required>
+        <option value="" disabled selected>Choisissez un jeu</option>
+        <option *ngFor="let game of games" [ngValue]="game._id">{{ game.name }}</option>
+      </select>
+      <div *ngIf="f['game'].invalid && (f['game'].dirty || f['game'].touched)" class="text-danger">
+        <div *ngIf="f['game'].errors?.['required']">Le jeu est requis.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="startTime">Date et heure de début :</label>
+      <input type="datetime-local" id="startTime" formControlName="startTime" class="form-control" required>
+      <div *ngIf="f['startTime'].invalid && (f['startTime'].dirty || f['startTime'].touched)" class="text-danger">
+        <div *ngIf="f['startTime'].errors?.['required']">La date et l'heure de début sont requises.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="duration">Durée de la partie (en minutes) :</label>
+      <input type="number" id="duration" formControlName="duration" class="form-control" required>
+      <div *ngIf="f['duration'].invalid && (f['duration'].dirty || f['duration'].touched)" class="text-danger">
+        <div *ngIf="f['duration'].errors?.['required']">La durée est requise.</div>
+          <div *ngIf="f['duration'].errors?.['min']">La durée doit être d'au moins 1 minute.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="endTime">Date et heure de fin :</label>
+      <input type="datetime-local" id="endTime" formControlName="endTime" class="form-control" [disabled]="true">
+    </div>
+    <input type="hidden" formControlName="creator">
+
+    <button type="submit" class="btn btn-primary" [disabled]="createTableForm.invalid">Créer la table</button>
+  </form>
+</div>
