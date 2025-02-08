@@ -127,30 +127,44 @@ const update = async (req, res) => {
 };
 
 const remove = async (req, res) => {
-    const tableId = req.params.id;
-    const userId = req.userId; // Récupéré via le middleware d'authentification
+  const tableId = req.params.id;
+  const userId = req.user.userId; // Récupéré via le middleware d'authentification
 
-    try {
-        const gameTable = await GameTable.findById(tableId);
-        if (!gameTable) {
-            return res.status(404).json({ error: 'Table de jeu non trouvée' });
-        }
+  console.log("remove called. tableId:", tableId, "userId:", userId); // AJOUTE
 
-        // Vérification des autorisations (admin ou créateur)
-        const user = await User.findById(userId);  // Assurez-vous d'importer le modèle `User`.
-        if (user.role !== 'admin' && gameTable.creator.toString() !== userId) {
-            return res.status(403).json({ error: 'Vous n\'êtes pas autorisé à supprimer cette table.' });
-        }
+  try {
+      const gameTable = await GameTable.findById(tableId);
+      console.log("gameTable found:", gameTable); // AJOUTE
 
-        // Suppression de la table et mise à jour des références
-        await GameTable.findByIdAndDelete(tableId);
-        await User.updateMany({ gameTables: tableId }, { $pull: { gameTables: tableId } });
+      if (!gameTable) {
+          console.log("Game table not found."); // AJOUTE
+          return res.status(404).json({ error: 'Table de jeu non trouvée' });
+      }
 
-        res.status(200).json({ message: 'Table de jeu supprimée avec succès' });
-    } catch (err) {
-        console.error('Erreur lors de la suppression de la table de jeu :', err);
-        res.status(500).json({ error: 'Erreur lors de la suppression de la table de jeu' });
-    }
+      // Vérification des autorisations (admin ou créateur)
+      const user = await User.findById(userId);
+      console.log("User found:", user); // AJOUTE
+
+      if (user.role !== 'admin' && gameTable.creator.toString() !== userId) {
+          console.log("User not authorized to delete."); // AJOUTE
+          return res.status(403).json({ error: 'Vous n\'êtes pas autorisé à supprimer cette table.' });
+      }
+
+      console.log("Deleting game table..."); // AJOUTE
+
+      // Suppression de la table et mise à jour des références
+      await GameTable.findByIdAndDelete(tableId);
+
+      // MISE A JOUR DES UTILISATEURS
+      await User.updateMany({ gameTables: tableId }, { $pull: { gameTables: tableId } });
+
+      console.log("Game table deleted successfully."); // AJOUTE
+      res.status(200).json({ message: 'Table de jeu supprimée avec succès' });
+
+  } catch (err) {
+      console.error('Erreur lors de la suppression de la table de jeu :', err);
+      res.status(500).json({ error: 'Erreur lors de la suppression de la table de jeu' });
+  }
 };
 
 const list = async (req, res) => {

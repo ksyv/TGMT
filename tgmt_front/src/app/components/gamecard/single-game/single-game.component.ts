@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameService } from '../../../services/game.service';
+import { GameTableService } from '../../../services/game-table.service';
 import { AuthService } from '../../../services/auth.service';
 import { Game } from '../../../models/game';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -23,7 +24,8 @@ export class SingleGameComponent implements OnInit {
     private router: Router,
     private gameService: GameService,
     private authService: AuthService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private gameTableService: GameTableService
   ) { }
 
   ngOnInit(): void {
@@ -170,4 +172,23 @@ export class SingleGameComponent implements OnInit {
             this.router.navigate(['/create-table', this.game._id]);
         }
     }
+
+    deleteTable(tableId: string): void {
+      console.log("deleteTable called with tableId:", tableId); // AJOUTE
+      if (confirm('Êtes-vous sûr de vouloir supprimer cette table de jeu ?')) {
+          this.gameTableService.deleteTable(tableId).subscribe({
+              next: () => {
+                  console.log('Table supprimée avec succès');
+                  // Recharger les tables après la suppression
+                  const gameId = this.route.snapshot.paramMap.get('id');
+                  if (gameId) {
+                      this.loadTables(gameId);
+                  }
+              },
+              error: (error: any) => {
+                  console.error('Erreur lors de la suppression de la table:', error);
+              }
+          });
+      }
+  }
 }

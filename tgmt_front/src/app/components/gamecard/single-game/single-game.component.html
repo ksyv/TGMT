@@ -50,9 +50,11 @@
                     <strong>Jeu:</strong> {{ table.game ? table.game.name : 'Inconnu' }}<br>
                     <span *ngIf="table.endTime"><strong>Fin:</strong> {{ table.endTime | date:'dd/MM HH:mm' }}</span><br>
                     <strong>Statut:</strong> <span [ngClass]="{'text-success': table.open, 'text-danger': !table.open}">{{ table.open ? 'Ouverte' : 'Fermée' }}</span><br>
-                    <strong>Participants:</strong> {{ table.participants.length }}
+                    <strong>Participants:</strong> {{ table.participants.length }}<br>
+
                   </p>
-                  <button class="btn btn-primary btn-custom-gradient">S'inscrire</button>  </div>
+                  <button class="btn btn-primary btn-custom-gradient">S'inscrire</button>
+                  <button class="btn btn-danger" *ngIf="isAdmin || userId === table.creator._id.toString()" (click)="deleteTable(table._id)">Supprimer</button> </div>
               </div>
             </div>
           </div>
