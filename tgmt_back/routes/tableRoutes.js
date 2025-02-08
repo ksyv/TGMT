@@ -7,7 +7,7 @@ const auth = require('../middlewares/auth'); // Middleware d'authentification si
 router.post('/', auth, TableController.create);
 
 // Exemple : route pour récupérer toutes les tables de jeu
-router.get('/', auth, TableController.list);
+router.get('/', TableController.list);
 
 // Exemple : route pour récupérer une table de jeu par son ID
 router.get('/:id', auth, TableController.show);

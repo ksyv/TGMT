@@ -15,8 +15,8 @@ export class SingleGameComponent implements OnInit {
   isAdmin: boolean = false;
   userId: string = '';
   isInFavorites: boolean = false;
-    isLoggedIn: boolean = false;
-    tables: any[] = []; // Ajoute cette ligne pour stocker les tables
+  isLoggedIn: boolean = false;
+  tables: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -69,16 +69,18 @@ export class SingleGameComponent implements OnInit {
     }
 
   // Ajoute cette méthode pour charger les tables
-    loadTables(gameId: string): void {
-        this.gameService.getTablesByGameId(gameId).subscribe({ // Assure-toi d'avoir cette méthode
-            next: (tables: any) => {
-                this.tables = tables; // Stocke les tables récupérées
-            },
-            error: (error) => {
-                console.error('Error fetching tables:', error);
-            }
-        });
-    }
+  loadTables(gameId: string): void {
+    console.log("loadTables called with gameId:", gameId); // AJOUTE
+    this.gameService.getTablesByGameId(gameId).subscribe({
+      next: (tables: any) => {
+        console.log("Tables received:", tables); // AJOUTE
+        this.tables = tables;
+      },
+      error: (error) => {
+        console.error('Error fetching tables:', error);
+      }
+    });
+  }
 
   checkFavoriteStatus(): void {
     if (this.game && this.userId) {

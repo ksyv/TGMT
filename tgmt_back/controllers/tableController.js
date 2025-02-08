@@ -152,40 +152,51 @@ const remove = async (req, res) => {
 };
 
 const list = async (req, res) => {
-    try {
-      const { gameId, startTime, endTime, available } = req.query;
-      const filter = {};
-  
-      if (gameId) {
-        filter.game = gameId;
-      }
-  
-      if (startTime && endTime) {
-        // Filtre pour trouver les tables qui se chevauchent avec la plage horaire spécifiée
-        filter.$or = [
-            { startTime: { $lte: endTime }, endTime: { $gte: startTime } }, // Cas général
-            { startTime: { $gte: startTime, $lte: endTime } }, // startTime à l'intérieur
-            { endTime: { $gte: startTime, $lte: endTime } }   // endTime à l'intérieur
-        ];
-      } else if (startTime) {
-        filter.startTime = { $gte: new Date(startTime) };
-      } else if (endTime) {
-        filter.endTime = { $lte: new Date(endTime) };
-      }
-  
-      if (available) {
-        filter.open = available === 'true'; // Convertit la chaîne en booléen
-        // On pourrait aussi filtrer sur le nombre de participants :
-        // if (available === 'true') { filter.participants.length < capacité maximale du jeu }
-      }
-  
-      const gameTables = await GameTable.find(filter).populate('creator game participants');
-      res.status(200).json({ gameTables });
-    } catch (err) {
-      console.error('Erreur lors de la récupération des tables de jeu :', err);
-      res.status(500).json({ error: 'Erreur lors de la récupération des tables de jeu' });
+  try {
+    const { gameId, startTime, endTime, available } = req.query;
+    const filter = {};
+      console.log("list called, req.query:", req.query); // AJOUTE CE LOG
+
+    if (gameId) {
+      filter.game = gameId;
+        console.log("Filtering by gameId:", gameId); // AJOUTE CE LOG
     }
-  };
+
+    if (startTime && endTime) {
+      filter.$or = [
+          { startTime: { $lte: endTime }, endTime: { $gte: startTime } },
+          { startTime: { $gte: startTime, $lte: endTime } },
+          { endTime: { $gte: startTime, $lte: endTime } }
+      ];
+        console.log("Filtering by startTime/endTime:", startTime, endTime); // AJOUTE CE LOG
+    } else if (startTime) {
+      filter.startTime = { $gte: new Date(startTime) };
+        console.log("Filtering by startTime:", startTime); // AJOUTE CE LOG
+    } else if (endTime) {
+      filter.endTime = { $lte: new Date(endTime) };
+      console.log("Filtering by endTime:", endTime);
+    }
+
+    if (available) {
+      filter.open = available === 'true';
+      console.log("Filtering by available:", available); // AJOUTE CE LOG
+      // On pourrait aussi filtrer sur le nombre de participants
+    }
+      console.log("Final filter:", filter);
+
+      const gameTables = await GameTable.find(filter)
+          .populate('creator', 'username')  // <--- MODIFICATION ICI :  Spécifie 'username'
+          .populate('game', 'name')       // <--- et 'name'
+          .populate('participants', 'username'); // et potentiellement ici aussi
+      
+      console.log("gameTables found:", gameTables);
+    res.status(200).json( gameTables );
+
+  } catch (err) {
+    console.error('Erreur lors de la récupération des tables de jeu :', err);
+    res.status(500).json({ error: 'Erreur lors de la récupération des tables de jeu' });
+  }
+};
 
 module.exports = {
     create,
