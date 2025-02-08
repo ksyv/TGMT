@@ -8,7 +8,8 @@ const gameTableSchema = new Schema({
     endTime: { type: Date, required: true },
     duration: {type: Number, required: true},
     open: { type: Boolean, default: true },
-    participants: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+    participants: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    participantsCount: { type: Number, required: true },
 });
 
 // Validation personnalisée pour endTime

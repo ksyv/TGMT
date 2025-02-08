@@ -4,7 +4,7 @@ const Game = require('../models/gameModel'); // Importe le modèle Game
 
 
 const create = async (req, res) => {
-  const { creator, startTime, game, endTime, duration } = req.body;
+  const { creator, startTime, game, endTime, duration, participantsCount } = req.body;
 
   try {
       // Vérification de l'existence de l'utilisateur créateur
@@ -45,7 +45,9 @@ const create = async (req, res) => {
           game,
           endTime,
           duration,
-          participants: [creator] // Ajout du créateur à la liste des participants
+          participants: [creator],
+          participantsCount : participantsCount, // Ajout du créateur à la liste des participants
+          open: true,
       });
 
       const savedTable = await newGameTable.save();

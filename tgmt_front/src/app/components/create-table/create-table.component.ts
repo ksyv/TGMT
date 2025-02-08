@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { GameService } from '../../services/game.service';
 import { Router, ActivatedRoute } from '@angular/router'; // Importe ActivatedRoute
 import { Game } from '../../models/game';
@@ -18,13 +18,14 @@ export class CreateTableComponent implements OnInit {
   successMessage: string | null = null;
   errorMessage: string | null = null;
   userId: string | null = null;
-  gameId: string | null = null; // Ajoute cette propriété
+  gameId: string | null = null;
+  selectedGame: Game | undefined;
 
   constructor(
     private fb: FormBuilder,
     private gameService: GameService,
     private router: Router,
-    private route: ActivatedRoute, // Injecte ActivatedRoute
+    private route: ActivatedRoute,
     private authService: AuthService,
     private datePipe: DatePipe
   ) {
@@ -34,6 +35,7 @@ export class CreateTableComponent implements OnInit {
       duration: ['', [Validators.required, Validators.min(1)]],
       endTime: [{value: '', disabled: true}],
       creator: [''],
+      participantsCount: ['', [Validators.required]],
     });
   }
 
@@ -70,7 +72,28 @@ export class CreateTableComponent implements OnInit {
 
     this.createTableForm.get('startTime')?.valueChanges.subscribe(() => this.updateEndTime());
     this.createTableForm.get('duration')?.valueChanges.subscribe(() => this.updateEndTime());
+    //Abonnement aux changements du jeu pour mettre à jour les validateurs
+    this.createTableForm.get('game')?.valueChanges.subscribe(gameId => {
+      this.updateValidators(gameId);
+  });
   }
+   //Fonction pour mettre à jour les validateurs dynamiquement
+   updateValidators(gameId: string) {
+    const game = this.games.find(g => g._id === gameId);
+    this.selectedGame = game; // Stocke le jeu sélectionné
+    const participantsCountControl = this.createTableForm.get('participantsCount');
+
+    if (game) {
+        participantsCountControl?.setValidators([
+            Validators.required,
+            Validators.min(game.playerMin),
+            Validators.max(game.playerMax)
+        ]);
+    } else {
+        participantsCountControl?.setValidators(Validators.required); // Garde le validateur required
+    }
+    participantsCountControl?.updateValueAndValidity(); // Important : Met à jour la validité
+}
 
   onSubmit() {
     this.successMessage = null;
