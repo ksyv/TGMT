@@ -4,59 +4,61 @@ const Game = require('../models/gameModel'); // Importe le modèle Game
 
 
 const create = async (req, res) => {
-    const { creator, startTime, game, endTime, duration } = req.body;
+  const { creator, startTime, game, endTime, duration } = req.body;
 
-    try {
-        // Vérification de l'existence de l'utilisateur créateur
-        const user = await User.findById(creator);
-        if (!user) {
-            return res.status(400).json({ error: "L'utilisateur créateur n'existe pas." });
-        }
+  try {
+      // Vérification de l'existence de l'utilisateur créateur
+      const user = await User.findById(creator);
+      if (!user) {
+          return res.status(400).json({ error: "L'utilisateur créateur n'existe pas." });
+      }
 
-        // Vérification de l'existence du jeu
-        const gameExists = await Game.findById(game);
-        if (!gameExists) {
-            return res.status(400).json({ error: "Le jeu spécifié n'existe pas." });
-        }
+      // Vérification de l'existence du jeu
+      const gameExists = await Game.findById(game);
+      if (!gameExists) {
+          return res.status(400).json({ error: "Le jeu spécifié n'existe pas." });
+      }
 
-        // Vérification des chevauchements de tables (même jeu, même heure)
-        const overlappingTable = await GameTable.findOne({
-            game: game,
-            $or: [
-                { startTime: { $lte: endTime }, endTime: { $gte: startTime } }, // Cas général
-                { startTime: { $gte: startTime, $lte: endTime } }, // startTime à l'intérieur
-                { endTime: { $gte: startTime, $lte: endTime } }   // endTime à l'intérieur
-            ]
-        });
+      // Vérification des chevauchements de tables (même jeu, même heure)
+      const overlappingTable = await GameTable.findOne({
+          game: game,
+          $or: [
+              { startTime: { $lte: endTime }, endTime: { $gte: startTime } }, // Cas général
+              { startTime: { $gte: startTime, $lte: endTime } }, // startTime à l'intérieur
+              { endTime: { $gte: startTime, $lte: endTime } }   // endTime à l'intérieur
+          ]
+      });
 
-        if (overlappingTable) {
-            return res.status(400).json({ error: "Une table de jeu existe déjà pour ce jeu à cette heure." });
-        }
-        
-        // Vérification de la durée minimale
-        if(duration < gameExists.partytime){
-            return res.status(400).json({ error: "La durée ne peut pas être inférieure à la durée minimale prévue pour ce jeu." });
-        }
-        // Création de la nouvelle table de jeu
-        const newGameTable = new GameTable({
-            creator,
-            startTime,
-            game,
-            endTime,
-            duration
-        });
+      if (overlappingTable) {
+          return res.status(400).json({ error: "Une table de jeu existe déjà pour ce jeu à cette heure." });
+      }
 
-        const savedTable = await newGameTable.save();
+      // Vérification de la durée minimale
+      if(duration < gameExists.partytime){
+          return res.status(400).json({ error: "La durée ne peut pas être inférieure à la durée minimale prévue pour ce jeu." });
+      }
 
-        // Mise à jour de l'utilisateur pour inclure la nouvelle table (si nécessaire)
-        await User.findByIdAndUpdate(creator, { $push: { gameTables: savedTable._id } });
+      // Création de la nouvelle table de jeu
+      const newGameTable = new GameTable({
+          creator,
+          startTime,
+          game,
+          endTime,
+          duration,
+          participants: [creator] // Ajout du créateur à la liste des participants
+      });
 
-        res.status(201).json({ gameTable: savedTable });
+      const savedTable = await newGameTable.save();
 
-    } catch (err) {
-        console.error('Erreur lors de la création de la table de jeu :', err);
-        res.status(500).json({ error: 'Erreur lors de la création de la table de jeu', details: err.message });
-    }
+      // Mise à jour de l'utilisateur pour inclure la nouvelle table
+      await User.findByIdAndUpdate(creator, { $push: { gameTables: savedTable._id } });
+
+      res.status(201).json({ gameTable: savedTable });
+
+  } catch (err) {
+      console.error('Erreur lors de la création de la table de jeu :', err);
+      res.status(500).json({ error: 'Erreur lors de la création de la table de jeu', details: err.message });
+  }
 };
 
 const show = async (req, res) => {
