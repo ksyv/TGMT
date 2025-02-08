@@ -40,7 +40,8 @@ router.use(authMiddleware);
 
 // GET - Récupération des informations de l'utilisateur actuellement authentifié
 router.get('/current', authMiddleware, (req, res) => {
-    const userId = req.userId; // Obtenez l'ID de l'utilisateur à partir du middleware d'authentification
+    console.log("Route /current called.  req.user:", req.user); // AJOUTE CE LOG
+    const userId = req.user.userId; // Obtenez l'ID de l'utilisateur à partir du middleware d'authentification
 
     User.findById(userId)
         .then(user => {
