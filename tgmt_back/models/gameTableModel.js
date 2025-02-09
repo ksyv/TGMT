@@ -10,6 +10,7 @@ const gameTableSchema = new Schema({
     open: { type: Boolean, default: true },
     participants: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     participantsCount: { type: Number, required: true },
+    maxParticipants: { type: Number, required: true }, // Ajoute ce champ
 });
 
 // Validation personnalisée pour endTime

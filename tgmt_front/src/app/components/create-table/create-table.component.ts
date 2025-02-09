@@ -36,6 +36,7 @@ export class CreateTableComponent implements OnInit {
       endTime: [{value: '', disabled: true}],
       creator: [''],
       participantsCount: ['', [Validators.required]],
+      maxParticipants: ['', [Validators.required]]
     });
   }
 
@@ -72,28 +73,54 @@ export class CreateTableComponent implements OnInit {
 
     this.createTableForm.get('startTime')?.valueChanges.subscribe(() => this.updateEndTime());
     this.createTableForm.get('duration')?.valueChanges.subscribe(() => this.updateEndTime());
-    //Abonnement aux changements du jeu pour mettre à jour les validateurs
-    this.createTableForm.get('game')?.valueChanges.subscribe(gameId => {
-      this.updateValidators(gameId);
-  });
+      //Abonnement aux changements du jeu pour mettre à jour les validateurs
+      this.route.paramMap.subscribe(params => {
+          this.gameId = params.get('gameId');
+          this.gameService.getGames().subscribe({ //On recupere la liste des jeux
+              next: (data: any) => {
+                this.games = data.result;
+                  // Pré-remplit le champ 'game' si gameId est présent
+                  if (this.gameId) {
+                      this.createTableForm.patchValue({ game: this.gameId });
+                      this.updateValidators(this.gameId); // On met à jour les validateurs
+                  }
+              },
+              error: (error) => {
+                console.error('Erreur lors de la récupération des jeux:', error);
+                this.errorMessage = "Erreur lors de la récupération des jeux.";
+              }
+            });
+      });
+      this.authService.getUserId().subscribe(id => { /*...*/ });
   }
-   //Fonction pour mettre à jour les validateurs dynamiquement
-   updateValidators(gameId: string) {
-    const game = this.games.find(g => g._id === gameId);
-    this.selectedGame = game; // Stocke le jeu sélectionné
-    const participantsCountControl = this.createTableForm.get('participantsCount');
+  //Fonction pour mettre à jour les validateurs dynamiquement
+  updateValidators(gameId: string | null) { // Peut etre null
+      const game = this.games.find(g => g._id === gameId);
+      this.selectedGame = game;
+      const participantsCountControl = this.createTableForm.get('participantsCount');
+      const maxParticipantsControl = this.createTableForm.get('maxParticipants'); // Récupère le contrôle
 
-    if (game) {
-        participantsCountControl?.setValidators([
-            Validators.required,
-            Validators.min(game.playerMin),
-            Validators.max(game.playerMax)
-        ]);
-    } else {
-        participantsCountControl?.setValidators(Validators.required); // Garde le validateur required
-    }
-    participantsCountControl?.updateValueAndValidity(); // Important : Met à jour la validité
-}
+
+      if (game) {
+          participantsCountControl?.setValidators([
+              Validators.required,
+              Validators.min(game.playerMin),
+              Validators.max(game.playerMax)
+          ]);
+          // Ajoute les validateurs pour maxParticipants :
+          maxParticipantsControl?.setValidators([
+              Validators.required,
+              Validators.min(game.playerMin),
+              Validators.max(game.playerMax)
+          ]);
+      } else {
+          participantsCountControl?.setValidators(Validators.required);
+          maxParticipantsControl?.setValidators(Validators.required); // Garde le validateur required
+
+      }
+      participantsCountControl?.updateValueAndValidity();
+      maxParticipantsControl?.updateValueAndValidity(); // Met à jour la validité
+  }
 
   onSubmit() {
     this.successMessage = null;

@@ -4,7 +4,7 @@ const Game = require('../models/gameModel'); // Importe le modèle Game
 
 
 const create = async (req, res) => {
-  const { creator, startTime, game, endTime, duration, participantsCount } = req.body;
+  const { creator, startTime, game, endTime, duration, participantsCount, maxParticipants } = req.body;
 
   try {
       // Vérification de l'existence de l'utilisateur créateur
@@ -37,6 +37,11 @@ const create = async (req, res) => {
       if(duration < gameExists.partytime){
           return res.status(400).json({ error: "La durée ne peut pas être inférieure à la durée minimale prévue pour ce jeu." });
       }
+      // Vérification du nombre de participants
+      if (maxParticipants < gameExists.playerMin || maxParticipants > gameExists.playerMax) {
+        return res.status(400).json({ error: `Le nombre maximum de participants doit être compris entre ${gameExists.playerMin} et ${gameExists.playerMax}.` });
+      }
+
 
       // Création de la nouvelle table de jeu
       const newGameTable = new GameTable({
@@ -46,7 +51,8 @@ const create = async (req, res) => {
           endTime,
           duration,
           participants: [creator],
-          participantsCount : participantsCount, // Ajout du créateur à la liste des participants
+          participantsCount : participantsCount,
+          maxParticipants,
           open: true,
       });
 
@@ -79,54 +85,63 @@ const show = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const tableId = req.params.id;
-  const updateData = req.body;
-  const userId = req.userId; // Récupéré via le middleware d'authentification
-
-  try {
+   const tableId = req.params.id;
+   const updateData = req.body;
+   const userId = req.userId; // Récupéré via le middleware d'authentification
+  
+   try {
     const gameTable = await GameTable.findById(tableId);
-
+  
     if (!gameTable) {
-      return res.status(404).json({ error: 'Table de jeu non trouvée' });
+     return res.status(404).json({ error: 'Table de jeu non trouvée' });
     }
-
+  
     // Vérification des autorisations (admin ou créateur)
     const user = await User.findById(userId); // Assurez-vous que ce `User` est importé
     if (user.role !== 'admin' && gameTable.creator.toString() !== userId) {
-      return res.status(403).json({ error: 'Vous n\'êtes pas autorisé à modifier cette table.' });
+     return res.status(403).json({ error: 'Vous n\'êtes pas autorisé à modifier cette table.' });
     }
-
+  
+          // Vérif de la durée minimale
+          if(updateData.duration < gameTable.game.partytime){ //On compare la nouvelle durée à la durée minimal du jeu rataché.
+              return res.status(400).json({ error: "La durée ne peut pas être inférieure à la durée minimale prévue pour ce jeu." });
+          }
+          // Vérif du nombre de participant
+          if (updateData.maxParticipants < gameTable.game.playerMin || updateData.maxParticipants > gameTable.game.playerMax) {
+              return res.status(400).json({ error: `Le nombre maximum de participants doit être compris entre ${gameTable.game.playerMin} et ${gameTable.game.playerMax}.` });
+          }
+  
     // Vérif de chevauchement
     const overlappingTable = await GameTable.findOne({
-        game: updateData.game || gameTable.game, // Utilise le nouveau jeu si fourni, sinon l'ancien
-        _id: { $ne: tableId }, // Exclut la table actuelle de la recherche
-        $or: [
-          { startTime: { $lte: updateData.endTime || gameTable.endTime}, endTime: { $gte: updateData.startTime || gameTable.startTime } }, // Cas général
-          { startTime: { $gte: updateData.startTime || gameTable.startTime, $lte: updateData.endTime || gameTable.endTime} }, // startTime à l'intérieur
-          { endTime: { $gte: updateData.startTime || gameTable.startTime, $lte: updateData.endTime || gameTable.endTime } }   // endTime à l'intérieur
-        ]
+      game: updateData.game || gameTable.game, // Utilise le nouveau jeu si fourni, sinon l'ancien
+      _id: { $ne: tableId }, // Exclut la table actuelle de la recherche
+      $or: [
+       { startTime: { $lte: updateData.endTime || gameTable.endTime}, endTime: { $gte: updateData.startTime || gameTable.startTime } }, // Cas général
+       { startTime: { $gte: updateData.startTime || gameTable.startTime, $lte: updateData.endTime || gameTable.endTime} }, // startTime à l'intérieur
+       { endTime: { $gte: updateData.startTime || gameTable.startTime, $lte: updateData.endTime || gameTable.endTime } }  // endTime à l'intérieur
+      ]
     });
-
-    if (overlappingTable) {
-      return res.status(400).json({ error: "Une table de jeu existe déjà pour ce jeu à cette heure." });
-    }
-
+  
+      if (overlappingTable) {
+          return res.status(400).json({ error: "Une table de jeu existe déjà pour ce jeu à cette heure." });
+      }
+  
     // Empêche la modification du créateur et du jeu si l'utilisateur n'est pas admin
     if (user.role !== 'admin') {
-        delete updateData.creator;
-        delete updateData.game;
+      delete updateData.creator;
+      delete updateData.game;
     }
-
+  
     // Mise à jour des données de la table
     Object.assign(gameTable, updateData); // Met à jour la table *avant* la validation
-    await gameTable.validate();          // Validation explicite
+    await gameTable.validate();      // Validation explicite
     const updatedTable = await gameTable.save(); // On sauvegarde les changements validés
     res.status(200).json({ updatedTable });
-  } catch (err) {
+   } catch (err) {
     console.error('Erreur lors de la mise à jour de la table de jeu :', err);
     res.status(500).json({ error: 'Erreur lors de la mise à jour de la table de jeu', details: err.message });
-  }
-};
+   }
+  };
 
 const remove = async (req, res) => {
   const tableId = req.params.id;
@@ -206,7 +221,7 @@ const list = async (req, res) => {
 
       const gameTables = await GameTable.find(filter)
           .populate('creator', 'username')  // <--- MODIFICATION ICI :  Spécifie 'username'
-          .populate('game', 'name')       // <--- et 'name'
+          .populate('game', 'name playerMin playerMax')       // <--- et 'name'
           .populate('participants', 'username'); // et potentiellement ici aussi
       
       console.log("gameTables found:", gameTables);
@@ -218,35 +233,37 @@ const list = async (req, res) => {
   }
 };
 const joinTable = async (req, res) => {
-  const tableId = req.params.id;
-  const userId = req.user.userId; // Récupère l'ID de l'utilisateur depuis le token
+    const tableId = req.params.id;
+    const userId = req.user.userId;
 
-  try {
-      const table = await GameTable.findById(tableId);
-      if (!table) {
-          return res.status(404).json({ error: 'Table de jeu non trouvée.' });
-      }
+    try {
+        const table = await GameTable.findById(tableId);
+        if (!table) {
+            return res.status(404).json({ error: 'Table de jeu non trouvée.' });
+        }
 
-      // Vérifie si la table est ouverte
-      if (!table.open) {
-          return res.status(400).json({ error: 'Les inscriptions à cette table sont fermées.' });
-      }
+        if (!table.open) {
+            return res.status(400).json({ error: 'Les inscriptions à cette table sont fermées.' });
+        }
 
-      // Vérifier si l'utilisateur est déjà inscrit
-      if (table.participants.includes(userId)) {
-          return res.status(400).json({ error: 'Vous êtes déjà inscrit à cette table.' });
-      }
+        if (table.participants.includes(userId)) {
+            return res.status(400).json({ error: 'Vous êtes déjà inscrit à cette table.' });
+        }
 
-      // Ajouter l'utilisateur à la liste des participants
-      table.participants.push(userId);
-      await table.save();
+        // Vérification du nombre maximum de participants
+        if (table.participants.length >= table.maxParticipants) {
+            return res.status(400).json({ error: 'Le nombre maximum de participants est atteint.' });
+        }
 
-      res.status(200).json({ message: 'Inscription réussie.' });
+        table.participants.push(userId);
+        await table.save();
 
-  } catch (err) {
-      console.error("Erreur lors de l'inscription à la table de jeu :", err);
-      res.status(500).json({ error: "Erreur lors de l'inscription à la table de jeu." });
-  }
+        res.status(200).json({ message: 'Inscription réussie.' });
+
+    } catch (err) {
+        console.error("Erreur lors de l'inscription à la table de jeu :", err);
+        res.status(500).json({ error: "Erreur lors de l'inscription à la table de jeu." });
+    }
 };
 
 const leaveTable = async (req, res) => {

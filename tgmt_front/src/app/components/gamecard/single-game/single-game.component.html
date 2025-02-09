@@ -37,6 +37,10 @@
           <button class="btn btn-primary btn-custom-gradient w-100 mt-3"><a [href]="game.rules" target="_blank">Lien vers les règles</a></button>
         </div>
 
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+
         <div class="container card">
           <div *ngIf="tables && tables.length > 0">
             <h2>Tables disponibles pour ce jeu :</h2>
@@ -50,13 +54,13 @@
                       <strong>Jeu:</strong> {{ table.game ? table.game.name : 'Inconnu' }}<br>
                       <span *ngIf="table.endTime"><strong>Fin:</strong> {{ table.endTime | date:'dd/MM HH:mm' }}</span><br>
                       <strong>Statut:</strong> <span [ngClass]="{'text-success': table.open, 'text-danger': !table.open}">{{ table.open ? 'Ouverte' : 'Fermée' }}</span><br>
-                      <strong>Participants:</strong> {{ table.participants.length }}<br>
+                      <strong>Participants:</strong> {{ table.participants.length }} / {{ table.maxParticipants }}
                     </p>
                     <button *ngIf="isLoggedIn && isUserRegisteredToTable(table)" (click)="leaveTable(table._id)" class="btn btn-custom-gradient"> Se désinscrire
                     </button>
                     <button *ngIf="isLoggedIn && !isUserRegisteredToTable(table)" (click)="joinTable(table._id)" class="btn btn-custom-gradient"> S'inscrire
                     </button>
-                    <button class="btn btn-danger" *ngIf="isAdmin || userId === table.creator._id.toString()" (click)="deleteTable(table._id)">Supprimer</button>
+                    <button class="btn btn-danger" *ngIf="isAdmin || userId === table.creator?._id?.toString()" (click)="deleteTable(table._id)">Supprimer</button>
                   </div>
                 </div>
               </div>

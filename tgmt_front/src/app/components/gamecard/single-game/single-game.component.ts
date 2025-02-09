@@ -19,6 +19,7 @@ export class SingleGameComponent implements OnInit {
   isLoggedIn: boolean = false;
   tables: any[] = [];
   isUserRegistered: boolean = false;
+  errorMessage: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -26,7 +27,7 @@ export class SingleGameComponent implements OnInit {
     private gameService: GameService,
     private authService: AuthService,
     private sanitizer: DomSanitizer,
-    private gameTableService: GameTableService
+    private gameTableService: GameTableService,
   ) { }
 
   ngOnInit(): void {
@@ -71,57 +72,88 @@ export class SingleGameComponent implements OnInit {
         );
     }
 
-  // Ajoute cette méthode pour charger les tables
-  loadTables(gameId: string): void {
-    console.log("loadTables called with gameId:", gameId); // AJOUTE
-    this.gameService.getTablesByGameId(gameId).subscribe({
-      next: (tables: any) => {
-        console.log("Tables received:", tables); // AJOUTE
-        this.tables = tables;
-      },
-      error: (error) => {
-        console.error('Error fetching tables:', error);
+    loadTables(gameId: string): void {
+      console.log("loadTables called with gameId:", gameId);
+      this.gameService.getTablesByGameId(gameId).subscribe({
+        next: (tables: any) => {
+          console.log("Tables received:", tables);
+          this.tables = tables;
+          this.checkUserRegistration(); // Vérifie l'inscription après avoir chargé les tables
+        },
+        error: (error) => {
+          console.error('Error fetching tables:', error);
+        }
+      });
+    }
+  //VERIFICATION DE L INSCRIPTION
+  checkUserRegistration(): void {
+      if (this.tables && this.userId) {
+        //Pour chaque table, on vérifie si l'utilisateur est inscrit
+        this.tables.forEach(table => {
+          table.isUserRegistered = this.isUserRegisteredToTable(table);
+        });
       }
-    });
+    }
+
+  // Méthode pour vérifier si l'utilisateur est inscrit à une table donnée
+  isUserRegisteredToTable(table: any): boolean {
+      return table.participants.some((participant: any) => participant._id === this.userId);
   }
 
-  // Nouvelle méthode pour vérifier si l'utilisateur est inscrit à une table donnée
-  isUserRegisteredToTable(table: any): boolean {
-    return table.participants.some((participant: any) => participant._id === this.userId);
-}
-
-// Nouvelle méthode pour s'inscrire à une table
-joinTable(tableId: string): void {
+  joinTable(tableId: string): void {
   if (!this.userId) {
-      console.error("User ID is not available. Cannot join table.");
-      return; // Ou afficher un message/redirection pour se connecter
-    }
-    this.gameTableService.joinTable(tableId).subscribe({
-        next: () => {
-            console.log('Successfully joined table');
-            this.loadTables(this.game!._id); // Recharge les tables pour mettre à jour l'affichage
-        },
-        error: (error) => {
-            console.error('Error joining table:', error);
+    console.error("User ID is not available. Cannot join table.");
+    this.errorMessage = "Vous devez être connecté pour vous inscrire à une table."; // Message
+    return; // Arrêt si pas connecté
+  }
+
+  this.gameTableService.joinTable(tableId).subscribe({ // Appel correct
+    next: () => {
+      console.log('Successfully joined table');
+      this.errorMessage = null; // Efface les messages d'erreur
+      this.loadTables(this.game!._id); // Recharge les tables !
+    },
+    error: (error) => { // Gère l'erreur !
+      console.error('Error joining table:', error);
+      if (error.status === 400) { // Erreur de requête (probablement table pleine ou déjà inscrit)
+        if (error.error && error.error.error) {
+          this.errorMessage = error.error.error; // Message d'erreur du backend
+        } else {
+          this.errorMessage = "Erreur lors de l'inscription : table pleine ou vous êtes déjà inscrit.";
         }
-    });
+      } else {
+        this.errorMessage = "Une erreur est survenue lors de l'inscription à la table.";
+      }
+    }
+  });
 }
 
-// Nouvelle méthode pour se désinscrire d'une table
 leaveTable(tableId: string): void {
   if (!this.userId) {
-      console.error("User ID is not available. Cannot leave table.");
-      return; // Ou afficher un message/redirection pour se connecter
+    console.error("User ID is not available.  Cannot leave table.");
+    this.errorMessage = "Vous devez être connecté pour vous désinscrire d'une table."; // Message
+    return; // Arrêt si pas connecté
+  }
+  this.gameTableService.leaveTable(tableId).subscribe({ // Appel correct
+    next: () => {
+      console.log('Successfully left table');
+      this.errorMessage = null; // Efface les messages d'erreur
+      this.loadTables(this.game!._id);  // Recharge les tables !
+    },
+    error: (error) => { // Gère l'erreur !
+      console.error('Error leaving table:', error);
+      if (error.status === 400) {
+          if(error.error && error.error.error){
+              this.errorMessage = error.error.error; // Message d'erreur du backend
+
+          } else {
+              this.errorMessage = "Erreur lors de la désinscription. Veuillez réessayer."
+          }
+      } else {
+          this.errorMessage = "Une erreur est survenue lors de la désinscription de la table.";
+      }
     }
-    this.gameTableService.leaveTable(tableId).subscribe({
-        next: () => {
-            console.log('Successfully left table');
-            this.loadTables(this.game!._id); // Recharge les tables pour mettre à jour l'affichage
-        },
-        error: (error) => {
-            console.error('Error leaving table:', error);
-        }
-    });
+  });
 }
 
 
