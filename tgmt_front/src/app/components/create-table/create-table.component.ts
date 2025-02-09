@@ -141,6 +141,13 @@ export class CreateTableComponent implements OnInit {
         console.log('Table créée avec succès:', response);
         this.successMessage = 'Table de jeu créée avec succès !';
         // Redirection vers la liste des tables, ou la page de détails du jeu, etc.
+        if (this.gameId) {
+          this.router.navigate(['/single-game', this.gameId]); // Redirection correcte
+      } else {
+          // Gérer le cas où gameId n'est pas disponible (ne devrait pas arriver, mais c'est plus sûr)
+          console.error('gameId is not available for redirection.');
+          // Rediriger vers une page par défaut, ou afficher un message d'erreur, etc.
+      }
         // this.router.navigate(['/games', response.gameTable.game]);
         this.createTableForm.reset();
       },
