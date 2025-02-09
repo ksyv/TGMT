@@ -54,8 +54,13 @@
                       <strong>Jeu:</strong> {{ table.game ? table.game.name : 'Inconnu' }}<br>
                       <span *ngIf="table.endTime"><strong>Fin:</strong> {{ table.endTime | date:'dd/MM HH:mm' }}</span><br>
                       <strong>Statut:</strong> <span [ngClass]="{'text-success': table.open, 'text-danger': !table.open}">{{ table.open ? 'Ouverte' : 'Fermée' }}</span><br>
-                      <strong>Participants:</strong> {{ table.participants.length }} / {{ table.maxParticipants }}
-                    </p>
+                      <strong>Participants:</strong> {{ table.participants.length }} / {{ table.maxParticipants }}<br>
+                        <ul *ngIf="table.participants.length > 0">
+                            <li *ngFor="let participant of table.participants">
+                                {{ participant.username }}
+                            </li>
+                        </ul>
+                    
                     <button *ngIf="isLoggedIn && isUserRegisteredToTable(table)" (click)="leaveTable(table._id)" class="btn btn-custom-gradient"> Se désinscrire
                     </button>
                     <button *ngIf="isLoggedIn && !isUserRegisteredToTable(table)" (click)="joinTable(table._id)" class="btn btn-custom-gradient"> S'inscrire
