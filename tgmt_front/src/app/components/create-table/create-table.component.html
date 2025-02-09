@@ -43,20 +43,6 @@
     </div>
 
     <div class="form-group">
-      <label for="participantsCount">Nombre de joueurs :</label>
-      <input type="number" id="participantsCount" formControlName="participantsCount" class="form-control" required>
-        <div *ngIf="f['participantsCount'].invalid && (f['participantsCount'].dirty || f['participantsCount'].touched)" class="text-danger">
-            <div *ngIf="f['participantsCount'].errors?.['required']">Le nombre de participants est requis.</div>
-            <div *ngIf="selectedGame && f['participantsCount'].errors?.['min']">
-                Le nombre de participants doit être d'au moins {{selectedGame.playerMin}}.
-            </div>
-            <div *ngIf="selectedGame && f['participantsCount'].errors?.['max']">
-                Le nombre de participants ne peut pas dépasser {{selectedGame.playerMax}}.
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group">
       <label for="maxParticipants">Nombre maximum de participants :</label>
       <input type="number" id="maxParticipants" formControlName="maxParticipants" class="form-control" required>
       <div *ngIf="f['maxParticipants'].invalid && (f['maxParticipants'].dirty || f['maxParticipants'].touched)" class="text-danger">

@@ -35,7 +35,6 @@ export class CreateTableComponent implements OnInit {
       duration: ['', [Validators.required, Validators.min(1)]],
       endTime: [{value: '', disabled: true}],
       creator: [''],
-      participantsCount: ['', [Validators.required]],
       maxParticipants: ['', [Validators.required]]
     });
   }
