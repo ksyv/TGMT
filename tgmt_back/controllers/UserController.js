@@ -304,49 +304,50 @@ module.exports = {
     },
 
     // Supprimer un utilisateur par son ID
-    deleteUser: async (req, res) => {
+    deleteUser : async (req, res) => {
         try {
-            let userId = req.params.userId; // Récupère l'ID depuis les paramètres de l'URL
-            let isAdmin = false;
+            let userId = req.params.userId; // ID depuis l'URL (pour admin)
+            const requestingUser = await User.findById(req.user.userId); // <--- Récupère l'utilisateur connecté
     
-            // Vérifie si un rôle est présent dans le token
-            if (req.user && req.user.role) {
-                isAdmin = req.user.role === 'admin';
+            // Si l'ID utilisateur n'est pas fourni dans l'URL, utiliser l'ID du token (suppression de son propre compte)
+            if (!userId) {
+                userId = req.user.userId;
             }
     
-            // Si l'ID utilisateur n'est pas fourni dans l'URL, utiliser l'ID du token
-            if (!userId && req.userId) {
-                userId = req.userId;
-            }
-            
-            // Vérification des autorisations
-            if (!isAdmin && userId !== req.userId) {
-                return res.status(403).json({
-                status: 403,
-                message: "Vous n'êtes pas autorisé à effectuer cette action.",
-                });
-            }
+            console.log("userid", userId, "requestingUser", requestingUser, "admin?", requestingUser.role === 'admin');
     
-            // Vérifier si l'utilisateur existe
-            const user = await User.findById(userId);
-            if (!user) {
+            // 1. Vérifier si l'utilisateur à supprimer existe
+            const userToDelete = await User.findById(userId);
+            if (!userToDelete) {
+                console.log("user not found");
                 return res.status(404).json({
-                status: 404,
-                message: 'Utilisateur non trouvé',
+                    status: 404,
+                    message: 'Utilisateur non trouvé',
                 });
             }
     
-            // Supprimer les données associées à l'utilisateur (à adapter en fonction de ta structure de données)
-            // Par exemple, si tu as une collection 'GameTable' :
-            await GameTable.deleteMany({ creator: userId });
     
-            // Supprimer l'utilisateur
+            // 2. Vérification des autorisations (APRÈS avoir vérifié l'existence de l'utilisateur)
+            if (requestingUser.role !== 'admin' && userId !== req.user.userId) {
+              console.log("Tentative de suppression non autorisée. userId:", userId, "req.user.userId:", req.user.userId);
+                return res.status(403).json({
+                    status: 403,
+                    message: "Vous n'êtes pas autorisé à effectuer cette action.",
+                });
+            }
+    
+            // 3. Supprimer les données associées (si nécessaire)
+            // ... (ton code pour supprimer les tables de jeu, etc.) ...
+    
+            // 4. Supprimer l'utilisateur
             await User.findByIdAndDelete(userId);
+            console.log("User deleted:", userId);
     
             res.status(200).json({
                 status: 200,
                 message: 'Compte utilisateur et données associées supprimés avec succès',
             });
+    
         } catch (error) {
             console.error('Erreur lors de la suppression du compte utilisateur:', error);
             res.status(500).json({
@@ -355,7 +356,7 @@ module.exports = {
                 error: error.message,
             });
         }
-    },
+    }
     
 
 };
