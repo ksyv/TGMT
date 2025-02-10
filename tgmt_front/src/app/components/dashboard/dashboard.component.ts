@@ -19,5 +19,10 @@ export class DashboardComponent implements OnInit {
     this.authService.getRole().subscribe(role => {
       this.isAdmin = (role === 'admin'); // Sets the isAdmin flag based on the user's role.
     });
+    console.log("Initial selectedTab:", this.selectedTab);
+  }
+  selectManageHours() { // REMPLACE le (click) par (click)="selectManageHours()"
+    this.selectedTab = 'manage-hours';
+    console.log("selectedTab changed to:", this.selectedTab); // AJOUTE
   }
 }

@@ -1,0 +1,79 @@
+<h1 class="text-center mb-4">Liste de toutes les tables de jeu</h1>
+
+<div class="search-filters p-3 mb-4 bg-light rounded">
+  <h4 class="text-center mb-4">Filtrer les tables</h4>
+  <form (ngSubmit)="onFilter()" #filterForm="ngForm">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label for="gameFilter" class="form-label">Jeu:</label>
+        <select id="gameFilter" name="gameFilter" class="form-control" [(ngModel)]="selectedGameId">
+          <option value="">Tous les jeux</option>
+          <option *ngFor="let game of games" [value]="game._id">{{ game.name }}</option>
+        </select>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <label for="startTimeFilter" class="form-label">Date et heure de début (min):</label>
+        <input type="datetime-local" id="startTimeFilter" name="startTimeFilter" class="form-control" [(ngModel)]="startTimeFilter">
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <label for="endTimeFilter" class="form-label">Date et heure de fin (max):</label>
+        <input type="datetime-local" id="endTimeFilter" name="endTimeFilter" class="form-control" [(ngModel)]="endTimeFilter">
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <label for="openFilter" class="form-label">Statut:</label>
+        <select id="openFilter" name="openFilter" class="form-control" [(ngModel)]="openFilter">
+          <option value="">Tous</option>
+          <option value="true">Ouvertes</option>
+          <option value="false">Fermées</option>
+        </select>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-custom-gradient w-100 mt-3">Filtrer</button>
+    <button type="button" class="btn btn-secondary w-100 mt-2" (click)="resetFilters()">Réinitialiser</button>
+  </form>
+</div>
+
+<div *ngIf="errorMessage" class="alert alert-danger">
+  {{ errorMessage }}
+</div>
+
+<div *ngIf="tables && tables.length > 0" class="row">
+  <div *ngFor="let table of tables" class="col-md-4 mb-3">
+    <div class="game-card">
+        <a [routerLink]="['/single-game', table.game?._id]">
+          <img class="game-image" [src]="table.game?.image" [alt]="table.game?.name">
+        </a>
+        <div class="game-title">{{ table.game ? table.game.name : 'Jeu inconnu' }}</div>
+        <div class="game-details">
+          <div class="column">
+            <div><span class="orange-text">Créateur:</span> {{ table.creator ? table.creator.username : 'Inconnu' }}</div>
+            <div><span class="orange-text">Début:</span> {{ table.startTime | date:'dd/MM HH:mm' }}</div>
+            <div *ngIf="table.endTime"><span class="orange-text">Fin:</span> {{ table.endTime | date:'dd/MM HH:mm' }}</div>
+          </div>
+          <div class="column">
+            <div><span class="orange-text">Statut:</span> <span [ngClass]="{'text-success': table.open, 'text-danger': !table.open}">{{ table.open ? 'Ouverte' : 'Fermée' }}</span></div>
+            <div><span class="orange-text">Participants:</span> {{ table.participants.length }} / {{ table.maxParticipants }}</div>
+           </div>
+           <div class="column">
+            <span *ngIf="table.participants.length > 0">
+                <span *ngFor="let participant of table.participants; let isLast = last">
+                    {{participant.username}}{{ !isLast ? ', ' : '' }}
+                </span>
+            </span>
+           </div>
+        </div>
+
+        <button *ngIf="isLoggedIn && isUserRegisteredToTable(table)" (click)="leaveTable(table._id)" class="btn btn-custom-gradient"> Se désinscrire</button>
+        <button *ngIf="isLoggedIn && !isUserRegisteredToTable(table)" (click)="joinTable(table._id)" class="btn btn-custom-gradient"> S'inscrire</button>
+        <button class="btn btn-danger" *ngIf="isAdmin || userId === table.creator?._id?.toString()" (click)="deleteTable(table._id)">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!tables || tables.length === 0">
+    <p>Aucune table de jeu n'est disponible pour le moment.</p>
+</div>

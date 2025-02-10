@@ -1,6 +1,6 @@
 // src/app/services/game-table.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -26,6 +26,21 @@ export class GameTableService {
   // Nouvelle méthode pour quitter une table
   leaveTable(tableId: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/${tableId}/leave`, {}, this.getHttpOptions());
+  }
+
+  // Nouvelle méthode pour récupérer TOUTES les tables
+  getAllTables(params?: any): Observable<any[]> {  // Ajoute le paramètre optionnel 'params'
+    let httpParams = new HttpParams();
+
+    if (params) {
+      for (const key in params) {
+        if (params.hasOwnProperty(key) && params[key] !== null && params[key] !== undefined && params[key] !== '') {
+          httpParams = httpParams.set(key, params[key]);
+        }
+      }
+    }
+
+    return this.http.get<any[]>(`${this.baseUrl}`, { params: httpParams }); // Passe les paramètres à la requête
   }
 
     private getHttpOptions() {

@@ -24,6 +24,9 @@ import { UpdateGameComponent } from './components/update-game/update-game.compon
 import { FavoritesComponent } from './components/dashboard/favorites/favorites.component';
 import { QuillModule } from 'ngx-quill';
 import { CreateTableComponent } from './components/create-table/create-table.component';
+import { TableListComponent } from './components/table-list/table-list.component';
+import { OpeningHoursComponent } from './components/opening-hours/opening-hours.component';
+
 
 @NgModule({
   declarations: [
@@ -44,7 +47,9 @@ import { CreateTableComponent } from './components/create-table/create-table.com
     UserManagementComponent,
     UpdateGameComponent,
     FavoritesComponent,
-    CreateTableComponent
+    CreateTableComponent,
+    TableListComponent,
+    OpeningHoursComponent
   ],
   imports: [
     BrowserModule,

@@ -41,10 +41,6 @@ export class AuthService {
             if (user && user.role) {
               this.roleSubject.next(user.role);
               this.userIdSubject.next(user._id);
-              // Redirection automatique vers admin/dashboard si l'utilisateur est un admin
-              if (user.role === 'admin') {
-                this.router.navigateByUrl('/admin/dashboard');
-              }
             }
           },
           error => {

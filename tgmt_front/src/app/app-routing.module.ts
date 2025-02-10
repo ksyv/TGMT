@@ -14,7 +14,9 @@ import { UserManagementComponent } from './admin/user-management/user-management
 import { UpdateGameComponent } from './components/update-game/update-game.component';
 import { AdminGuard } from './guards/admin.guard';
 import { FavoritesComponent } from './components/dashboard/favorites/favorites.component';
-import { CreateTableComponent } from './components/create-table/create-table.component'; // Importe le composant
+import { CreateTableComponent } from './components/create-table/create-table.component';
+import { TableListComponent } from './components/table-list/table-list.component';
+import { OpeningHoursComponent } from './components/opening-hours/opening-hours.component';
 
 const routes: Routes = [
   { path: 'sign-up', component: SignupComponent },
@@ -27,6 +29,7 @@ const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'create-table/:gameId', component: CreateTableComponent, canActivate: [AuthGuard] }, // Ajout de la route, avec AuthGuard
+  { path: 'tables', component: TableListComponent },
   {
     path: 'admin/dashboard',
     component: DashboardComponent,
@@ -47,6 +50,7 @@ const routes: Routes = [
   { path: 'dashboard/favorites', component: FavoritesComponent, canActivate: [AuthGuard]}, // Ajout de AuthGuard
   // Redirection par défaut
   { path: '', redirectTo: '/gamecard', pathMatch: 'full' },
+  { path: 'admin/opening-hours', component: OpeningHoursComponent, canActivate: [AdminGuard] },
 ];
 
 @NgModule({

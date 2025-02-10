@@ -14,9 +14,9 @@
         <div class="nav" [class.show]="isMenuOpen" (click)="isMenuOpen = false">
           <ul>
             <li><a href="https://www.opbc.fr/index.php#logo">ACCUEIL</a></li>
-            <li><a href="https://www.opbc.fr/index.php#opbc">OPBC</a></li>
-            <li><a href="https://www.opbc.fr/index.php#contact">CONTACT</a></li>
             <li><a routerLink="/gamecard">JEUX</a></li>
+            <li><a routerLink="/tables">TABLES</a></li>
+            <li><a href="https://www.opbc.fr/index.php#contact">CONTACT</a></li>
             <li class="nav-item" *ngIf="!isLoggedIn">
               <a routerLink="/sign-in">CONNEXION</a>
             </li>

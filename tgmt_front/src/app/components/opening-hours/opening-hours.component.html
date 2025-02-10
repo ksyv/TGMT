@@ -1,0 +1,33 @@
+<div *ngIf="isAdmin">
+  <h2>Gestion des horaires d'ouverture</h2>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+  {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+  {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="openingHoursForm" (ngSubmit)="onSubmit()">
+      <div formGroupName="hours">
+          <div *ngFor="let day of daysOfWeek" class="form-group">
+          <label>{{ day | titlecase }} :</label> <div [formGroupName]="day" class="row">
+              <div class="col">
+                  <label for="{{day}}-startTime">Heure d'ouverture :</label>
+                  <input type="time" id="{{day}}-startTime" formControlName="startTime" class="form-control">
+              </div>
+              <div class="col">
+                  <label for="{{day}}-endTime">Heure de fermeture :</label>
+                  <input type="time" id="{{day}}-endTime" formControlName="endTime" class="form-control">
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <button type="submit" [disabled]="openingHoursForm.invalid" class="btn btn-primary">Enregistrer</button>
+  </form>
+</div>
+
+<div *ngIf="!isAdmin">
+  <p>Vous n'avez pas l'autorisation d'accéder à cette page.</p>
+</div>
