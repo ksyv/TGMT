@@ -23,6 +23,10 @@ import { UserManagementComponent } from './admin/user-management/user-management
 import { UpdateGameComponent } from './components/update-game/update-game.component';
 import { FavoritesComponent } from './components/dashboard/favorites/favorites.component';
 import { QuillModule } from 'ngx-quill';
+import { CreateTableComponent } from './components/create-table/create-table.component';
+import { TableListComponent } from './components/table-list/table-list.component';
+import { OpeningHoursComponent } from './components/opening-hours/opening-hours.component';
+
 
 @NgModule({
   declarations: [
@@ -42,7 +46,10 @@ import { QuillModule } from 'ngx-quill';
     CreateGameComponent,
     UserManagementComponent,
     UpdateGameComponent,
-    FavoritesComponent
+    FavoritesComponent,
+    CreateTableComponent,
+    TableListComponent,
+    OpeningHoursComponent
   ],
   imports: [
     BrowserModule,

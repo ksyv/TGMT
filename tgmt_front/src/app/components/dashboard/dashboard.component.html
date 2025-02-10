@@ -13,6 +13,9 @@
     <li class="nav-item">
       <a  class="nav-link" [class.active]="selectedTab === 'favorites'" (click)="selectedTab = 'favorites'">Mes jeux favoris</a>
     </li>
+    <li *ngIf="isAdmin" class="nav-item">
+      <a class="nav-link" [class.active]="selectedTab === 'manage-hours'" (click)="selectedTab = 'manage-hours'">Gestion des Horaires</a>
+    </li>
     <!-- Ajoutez d'autres onglets si nécessaire -->
   </ul>
 </nav>
@@ -30,5 +33,7 @@
   <div *ngIf="selectedTab === 'favorites'">
     <app-favorites></app-favorites> <!-- Composant pour les jeux favoris -->
   </div>
-  <!-- Ajoutez les autres contenus pour les autres onglets -->
+  <div *ngIf="selectedTab === 'manage-hours' && isAdmin">
+    <app-opening-hours></app-opening-hours>
+  </div>
 </div>

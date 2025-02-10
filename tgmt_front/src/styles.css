@@ -142,6 +142,10 @@ strong {
   border: none;
 }
 
+.btn-custom-gradient a {
+  color: var(--white-color);
+}
+
 /* Center Tabs (consider if this is specific to a component) */
 .center-tabs {
   display: flex;

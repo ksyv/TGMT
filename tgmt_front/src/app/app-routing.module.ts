@@ -14,6 +14,9 @@ import { UserManagementComponent } from './admin/user-management/user-management
 import { UpdateGameComponent } from './components/update-game/update-game.component';
 import { AdminGuard } from './guards/admin.guard';
 import { FavoritesComponent } from './components/dashboard/favorites/favorites.component';
+import { CreateTableComponent } from './components/create-table/create-table.component';
+import { TableListComponent } from './components/table-list/table-list.component';
+import { OpeningHoursComponent } from './components/opening-hours/opening-hours.component';
 
 const routes: Routes = [
   { path: 'sign-up', component: SignupComponent },
@@ -21,32 +24,37 @@ const routes: Routes = [
   { path: 'gamecard', component: GamecardComponent },
   { path: 'single-game/:id', component: SingleGameComponent },
   { path: 'games/:id/update', component: UpdateGameComponent, canActivate: [AuthGuard, AdminGuard], data: { expectedRole: 'admin' }},
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'mes-informations', component: UserInfoComponent },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] }, // Ajout du AuthGuard ici
+  { path: 'mes-informations', component: UserInfoComponent, canActivate: [AuthGuard] }, // Ajout du AuthGuard ici
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'create-table/:gameId', component: CreateTableComponent, canActivate: [AuthGuard] }, // Ajout de la route, avec AuthGuard
+  { path: 'tables', component: TableListComponent },
   {
     path: 'admin/dashboard',
     component: DashboardComponent,
-    canActivate: [AuthGuard],
-    data: { expectedRole: 'admin' },
-    children: [
-      {
-        path: 'create-game',
-        component: CreateGameComponent,
-        canActivate: [AuthGuard],
-        data: { expectedRole: 'admin' }
-      },
-      { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard], data: { expectedRole: 'admin' } },
-    ],
+    canActivate: [AuthGuard, AdminGuard], // Ajout du AdminGuard
+    data: { expectedRole: 'admin' }, // Plus besoin de data, on a AdminGuard
+    // children: [ // Les routes enfants sont plus nécessaires
+    //   {
+    //     path: 'create-game',
+    //     component: CreateGameComponent,
+    //     canActivate: [AuthGuard],
+    //     data: { expectedRole: 'admin' }
+    //   },
+    //   { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard], data: { expectedRole: 'admin' } },
+    // ],
   },
-  { path: 'dashboard/favorites', component: FavoritesComponent},
+    { path: 'create-game', component: CreateGameComponent, canActivate: [AdminGuard]},
+    { path: 'user-management', component: UserManagementComponent, canActivate: [AdminGuard]},
+  { path: 'dashboard/favorites', component: FavoritesComponent, canActivate: [AuthGuard]}, // Ajout de AuthGuard
   // Redirection par défaut
   { path: '', redirectTo: '/gamecard', pathMatch: 'full' },
+  { path: 'admin/opening-hours', component: OpeningHoursComponent, canActivate: [AdminGuard] },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

@@ -306,47 +306,53 @@ module.exports = {
     // Supprimer un utilisateur par son ID
     deleteUser: async (req, res) => {
         try {
-            let userId = req.params.userId; // Récupère l'ID depuis les paramètres de l'URL
-            let isAdmin = false;
+            let userId = req.params.userId; // ID depuis l'URL (pour admin)
+            const requestingUser = await User.findById(req.user.userId); // Utilisateur connecté
     
-            // Vérifie si un rôle est présent dans le token
-            if (req.user && req.user.role) {
-                isAdmin = req.user.role === 'admin';
+            // Si pas d'ID dans l'URL, on supprime l'utilisateur connecté
+            if (!userId) {
+                userId = req.user.userId;
             }
     
-            // Si l'ID utilisateur n'est pas fourni dans l'URL, utiliser l'ID du token
-            if (!userId && req.userId) {
-                userId = req.userId;
-            }
-            
-            // Vérification des autorisations
-            if (!isAdmin && userId !== req.userId) {
-                return res.status(403).json({
-                status: 403,
-                message: "Vous n'êtes pas autorisé à effectuer cette action.",
-                });
-            }
+            console.log("userid", userId, "requestingUser", requestingUser, "admin?", requestingUser.role === 'admin')
     
-            // Vérifier si l'utilisateur existe
-            const user = await User.findById(userId);
-            if (!user) {
+            // 1. Vérifier si l'utilisateur à supprimer existe
+            const userToDelete = await User.findById(userId);
+            if (!userToDelete) {
+                console.log("user not found")
                 return res.status(404).json({
-                status: 404,
-                message: 'Utilisateur non trouvé',
+                    status: 404,
+                    message: 'Utilisateur non trouvé',
                 });
             }
     
-            // Supprimer les données associées à l'utilisateur (à adapter en fonction de ta structure de données)
-            // Par exemple, si tu as une collection 'GameTable' :
+            // 2. Vérification des autorisations (admin OU utilisateur supprimant son propre compte)
+            if (requestingUser.role !== 'admin' && userId !== req.user.userId) {
+                console.log("Tentative de suppression non autorisée. userId:", userId, "req.user.userId:", req.user.userId);
+                return res.status(403).json({
+                    status: 403,
+                    message: "Vous n'êtes pas autorisé à effectuer cette action.",
+                });
+            }
+    
+            // 3.  SUPPRIMER L'UTILISATEUR DES TABLES AUXQUELLES IL EST INSCRIT
+            await GameTable.updateMany(
+                { participants: userId }, // Trouve les tables où l'utilisateur est dans 'participants'
+                { $pull: { participants: userId } } // Retire l'ID de l'utilisateur du tableau 'participants'
+            );
+    
+            // 4. Supprimer les données associées (tables créées, etc.) - À ADAPTER
             await GameTable.deleteMany({ creator: userId });
     
-            // Supprimer l'utilisateur
+            // 5. Supprimer l'utilisateur
             await User.findByIdAndDelete(userId);
+            console.log("User deleted:", userId); // Ajout
     
             res.status(200).json({
                 status: 200,
                 message: 'Compte utilisateur et données associées supprimés avec succès',
             });
+    
         } catch (error) {
             console.error('Erreur lors de la suppression du compte utilisateur:', error);
             res.status(500).json({
@@ -355,7 +361,7 @@ module.exports = {
                 error: error.message,
             });
         }
-    },
+    }
     
 
 };

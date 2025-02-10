@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service'; // Adapte le chemin
+import { Observable, of } from 'rxjs'; // Importe 'of'
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -11,23 +11,34 @@ export class AuthGuard implements CanActivate {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    const expectedRole = route.data['expectedRole'];
-
+  canActivate(
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> {
     return this.authService.getRole().pipe(
-      take(1),
       map(role => {
-        if (role === expectedRole) {
-          return true; // L'utilisateur a le rôle attendu
-        } else {
-          // Redirection vers le dashboard approprié en fonction du rôle
-          if (role === 'admin') {
-            this.router.navigateByUrl('/admin/dashboard');
-          } else {
-            this.router.navigateByUrl('/sign-in');
-          }
+        const expectedRole = next.data['expectedRole']; // Récupère le rôle attendu
+
+        if (!role) {
+          // Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
+          this.router.navigate(['/sign-in'], { queryParams: { returnUrl: state.url } });
           return false;
         }
+
+        if (expectedRole && role !== expectedRole) {
+          // Si un rôle est attendu et que l'utilisateur ne l'a pas, redirige
+          // (tu peux personnaliser la redirection ici)
+          this.router.navigate(['/']); // Redirige vers l'accueil, par exemple
+          return false;
+        }
+
+        // Si l'utilisateur est connecté et a le rôle attendu (ou si aucun rôle n'est attendu), autorise l'accès
+        return true;
+      }),
+      catchError(() => {
+        // En cas d'erreur lors de la récupération du rôle (par exemple, token expiré)
+        this.router.navigate(['/sign-in'], { queryParams: { returnUrl: state.url } });
+        return of(false); // Bloque l'accès et force la déconnexion/redirection
       })
     );
   }

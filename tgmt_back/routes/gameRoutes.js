@@ -7,10 +7,10 @@ const router = express.Router();
 const gameImageUpload = require('../middlewares/multer.config');
 
 // GET - Rechercher des jeux par filtres
-router.get('/search', auth, GameController.searchGames); // Nouvelle route
+router.get('/search', GameController.searchGames); // Nouvelle route
 
 // GET - Récupérer tous les jeux
-router.get('/', auth, GameController.listGames);
+router.get('/', GameController.listGames);
 
 // GET - Récupérer un jeu par son ID
 router.get('/:id', GameController.getGameById);
