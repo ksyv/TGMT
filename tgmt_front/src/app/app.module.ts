@@ -28,6 +28,8 @@ import { TableListComponent } from './components/table-list/table-list.component
 import { OpeningHoursComponent } from './components/opening-hours/opening-hours.component';
 import { HomeComponent } from './components/home/home.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { LegalNoticeComponent } from './components/legal-notice/legal-notice.component';
+import { CookiePolicyComponent } from './components/cookie-policy/cookie-policy.component';
 
 
 @NgModule({
@@ -53,7 +55,9 @@ import { ContactComponent } from './components/contact/contact.component';
     TableListComponent,
     OpeningHoursComponent,
     HomeComponent,
-    ContactComponent
+    ContactComponent,
+    LegalNoticeComponent,
+    CookiePolicyComponent
   ],
   imports: [
     BrowserModule,

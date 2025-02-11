@@ -19,6 +19,9 @@ import { TableListComponent } from './components/table-list/table-list.component
 import { OpeningHoursComponent } from './components/opening-hours/opening-hours.component';
 import { HomeComponent } from './components/home/home.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { LegalNoticeComponent } from './components/legal-notice/legal-notice.component';
+import { CookiePolicyComponent } from './components/cookie-policy/cookie-policy.component';
+
 
 const routes: Routes = [
   { path: 'sign-up', component: SignupComponent },
@@ -34,6 +37,8 @@ const routes: Routes = [
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'create-table/:gameId', component: CreateTableComponent, canActivate: [AuthGuard] }, // Ajout de la route, avec AuthGuard
   { path: 'tables', component: TableListComponent },
+  { path: 'mentions-legales', component: LegalNoticeComponent },
+  { path: 'politique-cookies', component: CookiePolicyComponent },
   {
     path: 'admin/dashboard',
     component: DashboardComponent,
