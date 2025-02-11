@@ -140,6 +140,7 @@ strong {
   background: linear-gradient(140deg, var(--primary-color) 40%, var(--secondary-color) 90%);
   color: var(--white-color);
   border: none;
+  margin: 2px;
 }
 
 .btn-custom-gradient a {

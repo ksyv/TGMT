@@ -1,3 +1,4 @@
+<div class="container mt-4">
 <h1 class="text-center mb-4">Liste de toutes les tables de jeu</h1>
 
 <div class="search-filters p-3 mb-4 bg-light rounded">
@@ -41,9 +42,9 @@
   {{ errorMessage }}
 </div>
 
-<div *ngIf="tables && tables.length > 0" class="row">
-  <div *ngFor="let table of tables" class="col-md-4 mb-3">
-    <div class="game-card">
+<div *ngIf="tables && tables.length > 0" class="row" >
+  <div *ngFor="let table of tables" class="col-md-3 mb-3">
+    <div class="game-card" >
         <a [routerLink]="['/single-game', table.game?._id]">
           <img class="game-image" [src]="table.game?.image" [alt]="table.game?.name">
         </a>
@@ -76,4 +77,5 @@
 
 <div *ngIf="!tables || tables.length === 0">
     <p>Aucune table de jeu n'est disponible pour le moment.</p>
+</div>
 </div>

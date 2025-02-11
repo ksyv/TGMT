@@ -26,6 +26,8 @@ import { QuillModule } from 'ngx-quill';
 import { CreateTableComponent } from './components/create-table/create-table.component';
 import { TableListComponent } from './components/table-list/table-list.component';
 import { OpeningHoursComponent } from './components/opening-hours/opening-hours.component';
+import { HomeComponent } from './components/home/home.component';
+import { ContactComponent } from './components/contact/contact.component';
 
 
 @NgModule({
@@ -49,7 +51,9 @@ import { OpeningHoursComponent } from './components/opening-hours/opening-hours.
     FavoritesComponent,
     CreateTableComponent,
     TableListComponent,
-    OpeningHoursComponent
+    OpeningHoursComponent,
+    HomeComponent,
+    ContactComponent
   ],
   imports: [
     BrowserModule,

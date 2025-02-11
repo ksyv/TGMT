@@ -17,10 +17,14 @@ import { FavoritesComponent } from './components/dashboard/favorites/favorites.c
 import { CreateTableComponent } from './components/create-table/create-table.component';
 import { TableListComponent } from './components/table-list/table-list.component';
 import { OpeningHoursComponent } from './components/opening-hours/opening-hours.component';
+import { HomeComponent } from './components/home/home.component';
+import { ContactComponent } from './components/contact/contact.component';
 
 const routes: Routes = [
   { path: 'sign-up', component: SignupComponent },
   { path: 'sign-in', component: SigninComponent },
+  { path: 'home', component: HomeComponent },        // AJOUTE
+  { path: 'contact', component: ContactComponent },
   { path: 'gamecard', component: GamecardComponent },
   { path: 'single-game/:id', component: SingleGameComponent },
   { path: 'games/:id/update', component: UpdateGameComponent, canActivate: [AuthGuard, AdminGuard], data: { expectedRole: 'admin' }},
@@ -48,8 +52,9 @@ const routes: Routes = [
     { path: 'create-game', component: CreateGameComponent, canActivate: [AdminGuard]},
     { path: 'user-management', component: UserManagementComponent, canActivate: [AdminGuard]},
   { path: 'dashboard/favorites', component: FavoritesComponent, canActivate: [AuthGuard]}, // Ajout de AuthGuard
+
   // Redirection par défaut
-  { path: '', redirectTo: '/gamecard', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'admin/opening-hours', component: OpeningHoursComponent, canActivate: [AdminGuard] },
 ];
 

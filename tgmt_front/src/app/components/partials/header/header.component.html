@@ -3,7 +3,7 @@
 <header>
 	<div class="nav-container">
 		<div id="logo">
-			<img src="https://www.opbc.fr/media/header/opbc-logo.svg"  alt="Logo d'opbc" title="opbc.fr" class="logo">
+			<img src="assets/images/logo_tgmt.png"  alt="Logo" title="tgmt" class="logo">
 		</div>
 
 		<nav>
@@ -13,10 +13,10 @@
         </button>
         <div class="nav" [class.show]="isMenuOpen" (click)="isMenuOpen = false">
           <ul>
-            <li><a href="https://www.opbc.fr/index.php#logo">ACCUEIL</a></li>
+            <li><a routerLink="/home">ACCUEIL</a></li>
             <li><a routerLink="/gamecard">JEUX</a></li>
             <li><a routerLink="/tables">TABLES</a></li>
-            <li><a href="https://www.opbc.fr/index.php#contact">CONTACT</a></li>
+            <li><a routerLink="/contact">CONTACT</a></li>
             <li class="nav-item" *ngIf="!isLoggedIn">
               <a routerLink="/sign-in">CONNEXION</a>
             </li>

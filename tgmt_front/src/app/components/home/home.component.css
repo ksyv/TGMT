@@ -1,0 +1,72 @@
+/* styles.css (global) - Assure-toi d'avoir les variables CSS définies */
+h2 {
+  text-align: center;
+}
+/* Hero Section */
+.hero {
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+  padding: 100px 0; /* Ajuste le padding selon tes besoins */
+}
+
+.hero-content {
+  max-width: 800px; /* Ajuste la largeur maximale */
+  margin: 0 auto;
+}
+
+.hero h1 {
+  font-size: 3rem; /* Ajuste la taille */
+  margin-bottom: 1rem;
+}
+
+.hero h2 {
+  font-size: 1.5rem; /* Ajuste la taille */
+  margin-bottom: 2rem;
+}
+
+/* Features Section */
+.features {
+  padding: 50px 0;
+  background-color: var(--light-gray-color);
+}
+
+.features {
+  text-align: center;
+  margin-bottom: 30px;
+  border-radius: 5px;
+}
+
+.features h1 {
+  margin-bottom: 1.5rem;
+}
+
+.features h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color)
+}
+
+.features img {
+  border-radius: 5px; /* Coins arrondis pour les images */
+  box-shadow: var(--box-shadow-subtle); /* Ombre légère */
+  margin-top: 1rem;
+}
+
+.card {
+  margin: auto 10%;
+}
+
+.card p {
+  text-align: center;
+}
+
+
+
+/* CTA Secondary */
+.cta-secondary {
+  background-color: var(--background-color);
+  padding: 50px 0;
+  text-align: center;
+}
+

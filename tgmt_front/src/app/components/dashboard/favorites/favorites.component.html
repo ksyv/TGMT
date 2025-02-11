@@ -1,21 +1,28 @@
-<div class="favorites-container">
-  <div *ngIf="favoriteGames.length > 0; else noFavorites">
-    <div class="row">
-      <div *ngFor="let favorite of favoriteGames" class="col-md-3 mb-4">
-        <div class="game-card">
-          <!-- Lien cliquable vers la page du jeu -->
-          <a [routerLink]="['/single-game', favorite.gameId._id]">
-            <!-- Image du jeu avec lien -->
-            <img class="game-image" [src]="favorite.gameId.image" alt="Game Image">
-          </a>
-          <!-- Nom du jeu -->
-          <div class="game-title">{{ favorite.gameId.name }}</div>
+<div class="container mt-4">
+<div *ngIf="favoriteGames && favoriteGames.length > 0" class="row">
+  <div *ngFor="let favorite of favoriteGames" class="col-md-3 mb-3">
+    <div class="game-card">
+      <a [routerLink]="['/single-game', favorite.gameId._id]">
+        <img class="game-image" [src]="favorite.gameId.image" [alt]="favorite.gameId.name">
+      </a>
+      <div class="game-title">{{ favorite.gameId.name }}</div>
+      <div class="game-details">
+        <div class="column">
+          <div><span class="orange-text">Type:</span> {{ favorite.gameId.type }}</div>
+          <div><span class="orange-text">Catégorie:</span> {{ favorite.gameId.category }}</div>
+        </div>
+        <div class="column">
+          <div><span class="orange-text">Âge minimum:</span> {{ favorite.gameId.ageMin }}</div>
+          <div><span class="orange-text">Difficulté:</span> {{ favorite.gameId.difficulty }}</div>
+          <div><span class="orange-text">Nombre de joueurs:</span> {{ favorite.gameId.playerMin }} - {{ favorite.gameId.playerMax }}</div>
+          <div><span class="orange-text">Temps de jeu:</span> {{ favorite.gameId.partytime }}</div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <ng-template #noFavorites>
-    <p>Vous n'avez pas de jeux favoris pour le moment.</p>
-  </ng-template>
+<div *ngIf="!favoriteGames || favoriteGames.length === 0">
+  <p>Vous n'avez pas encore de jeux favoris.</p>
+</div>
 </div>
