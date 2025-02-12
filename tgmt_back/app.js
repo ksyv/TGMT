@@ -8,6 +8,7 @@ const dotenv = require('dotenv').config(); // Import dotenv
 const cors = require('cors');
 const favoriteRoutes = require('./routes/favoriteRoutes');
 const openingHoursRoutes = require('./routes/openingHoursRoutes');
+const path = require('path');
 
 // Connect to MongoDB
 mongoose.connect(process.env.DATABASE)
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes principaux
 app.use('/', indexRouter);
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
 app.use('/users', usersRouter); // Utiliser userRoutes sur le chemin '/users'
 app.use('/api/games', gameRouter); // Utiliser gameRoutes sur le chemin '/games'
 app.use('/api/tables', tableRouter); // Utiliser tableRoutes sur le chemin '/tables'
