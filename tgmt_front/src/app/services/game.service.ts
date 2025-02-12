@@ -5,13 +5,15 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Game } from '../models/game';
 import { GameResponse } from '../models/game-response';
+import { environment } from '@environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-  private baseUrl = 'http://localhost:3000/api/games';
-  private tableUrl = 'http://localhost:3000/api/tables'; // URL pour les tables de jeu
+  private apiUrl = environment.apiUrl;
+  private baseUrl = environment.apiUrl + '/api/games';
+  private tableUrl = environment.apiUrl + '/api/tables'; // URL pour les tables de jeu
 
   constructor(private http: HttpClient) { }
 
@@ -48,19 +50,19 @@ export class GameService {
   }
 
   addToFavorites(data: { userId: string, gameId: string }): Observable<any> {
-    return this.http.post<any>(`http://localhost:3000/api/favorites/add-to-favorites`, data);
+    return this.http.post<any>(`${this.apiUrl}/api/favorites/add-to-favorites`, data);
   }
 
   removeFavorite(data: { userId: string, gameId: string }): Observable<any> {
-    return this.http.post<any>(`http://localhost:3000/api/favorites/remove-from-favorites`, data);
+    return this.http.post<any>(`${this.apiUrl}/api/favorites/remove-from-favorites`, data);
   }
 
   getFavorites(userId: string): Observable<any[]> {
-    return this.http.get<any[]>(`http://localhost:3000/api/favorites/${userId}`);
+    return this.http.get<any[]>(`${this.apiUrl}/api/favorites/${userId}`);
   }
 
   isFavorite(data: { userId: string, gameId: string }): Observable<any> {
-    return this.http.post<any>(`http://localhost:3000/api/favorites/is-favorite`, data);
+    return this.http.post<any>(`${this.apiUrl}/api/favorites/is-favorite`, data);
   }
 
   createGameTable(tableData: any): Observable<any> {

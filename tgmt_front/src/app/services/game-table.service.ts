@@ -2,12 +2,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '@environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameTableService {
-  private baseUrl = 'http://localhost:3000/api/tables'; // URL de base pour les tables
+  private baseUrl = environment.apiUrl + '/api/tables'; // URL de base pour les tables
 
   constructor(private http: HttpClient) { }
 

@@ -3,12 +3,13 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { BehaviorSubject, throwError, Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { environment } from '@environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/users'; // Déclaration de la propriété apiUrl
+  private apiUrl = environment.apiUrl + '/users'; // Déclaration de la propriété apiUrl
   public roleSubject = new BehaviorSubject<string | null>(null); // Correction du type pour accepter null
   role$ = this.roleSubject.asObservable();
 
