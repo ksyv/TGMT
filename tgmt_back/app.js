@@ -30,14 +30,17 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// IMPORTANT : Place cette ligne AVANT tes routes API
+app.use('/images', express.static(path.join(__dirname, 'public/images'))); //  <--  CORRECT
+
+app.use(express.static(path.join(__dirname, 'public'))); // Garde cette ligne *après* la ligne précédente
 
 // Routes principaux
 app.use('/', indexRouter);
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
-app.use('/users', usersRouter); // Utiliser userRoutes sur le chemin '/users'
-app.use('/api/games', gameRouter); // Utiliser gameRoutes sur le chemin '/games'
-app.use('/api/tables', tableRouter); // Utiliser tableRoutes sur le chemin '/tables'
+app.use('/users', usersRouter);
+app.use('/api/games', gameRouter);
+app.use('/api/tables', tableRouter);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/opening-hours', openingHoursRoutes);
 
@@ -56,5 +59,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;
