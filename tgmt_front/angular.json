@@ -38,12 +38,7 @@
               "src/styles.css",
               "node_modules/quill/dist/quill.snow.css"
             ],
-            "scripts": [],
-            "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -59,7 +54,13 @@
                   "maximumError": "4kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+                "fileReplacements": [
+                  {
+                    "replace": "src/environments/environment.ts",
+                    "with": "src/environments/environment.prod.ts"
+                  }
+                ]
             },
             "development": {
               "optimization": false,
@@ -79,10 +80,7 @@
               "buildTarget": "tgmt_front:build:development"
             }
           },
-          "defaultConfiguration": "development",
-          "options": {  
-            "proxyConfig": "proxy.conf.json"
-          }
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
