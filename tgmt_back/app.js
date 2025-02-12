@@ -8,7 +8,6 @@ const dotenv = require('dotenv').config(); // Import dotenv
 const cors = require('cors');
 const favoriteRoutes = require('./routes/favoriteRoutes');
 const openingHoursRoutes = require('./routes/openingHoursRoutes');
-const path = require('path');
 
 // Connect to MongoDB
 mongoose.connect(process.env.DATABASE)
